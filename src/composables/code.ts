@@ -1,6 +1,6 @@
 import { ref } from "vue"
 import copyTextToClipboard from "copy-text-to-clipboard"
-import { Code } from "../types"
+import { Code, LANGUAGE } from "../types"
 import { sources } from "../templates"
 import { submit } from "../api"
 
@@ -18,6 +18,11 @@ export function copy() {
 
 export function reset() {
   code.value.value = sources["python"]
+  output.value = ""
+}
+
+export function changeLanguage(language: LANGUAGE) {
+  code.value.value = sources[language]
   output.value = ""
 }
 

@@ -12,6 +12,7 @@ import {
   NSplit,
   NFlex,
   NIcon,
+  NMessageProvider,
 } from "naive-ui"
 import App from "./App.vue"
 import "normalize.css"
@@ -20,6 +21,7 @@ const naive = create({
   components: [
     NButton,
     NConfigProvider,
+    NMessageProvider,
     NLayout,
     NLayoutHeader,
     NLayoutContent,

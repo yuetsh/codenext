@@ -19,7 +19,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  language: "c",
+  language: "python",
   fontSize: 24,
   readonly: false,
   placeholder: "",
@@ -45,10 +45,10 @@ watch(
 )
 
 const lang = computed(() => {
-  if (props.language === "c") {
-    return cpp()
+  if (props.language === "python") {
+    return python()
   }
-  return python()
+  return cpp()
 })
 
 function onChange(v: string) {

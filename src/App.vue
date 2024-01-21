@@ -14,9 +14,12 @@ const isDark = useDark()
     :date-locale="dateZhCN"
     :theme="isDark ? darkTheme : null"
   >
-    <n-layout>
-      <Desktop v-if="isDesktop" />
-      <Mobile v-if="isMobile" />
-    </n-layout>
+    <n-message-provider :max="1">
+      <n-layout>
+        <Desktop v-if="isDesktop" />
+        <Mobile v-if="isMobile" />
+      </n-layout>
+    </n-message-provider>
   </n-config-provider>
 </template>
+./themes/breakpoints
