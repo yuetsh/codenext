@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { zhCN, dateZhCN, darkTheme } from "naive-ui"
+import { useDark } from "@vueuse/core"
 import Desktop from "./desktop/index.vue"
 import Mobile from "./mobile/index.vue"
 import { isDesktop, isMobile } from "./composables/breakpoints"
-import { useDark } from "@vueuse/core"
 const isDark = useDark()
 </script>
 
@@ -22,4 +22,3 @@ const isDark = useDark()
     </n-message-provider>
   </n-config-provider>
 </template>
-./themes/breakpoints

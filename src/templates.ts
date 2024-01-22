@@ -37,16 +37,16 @@ export const deadResults = {
       output: "黄岩一职",
     },
   },
-  python: {
-    encoded: "cHJpbnQoIum7hOWyqeS4gOiBjCIp",
+  java: {
+    encoded:
+      "cHVibGljIGNsYXNzIE1haW4gew0KICAgIHB1YmxpYyBzdGF0aWMgdm9pZCBtYWluKFN0cmluZ1tdIGFyZ3MpIHsNCiAgICAgICAgU3lzdGVtLm91dC5wcmludGxuKCLpu4TlsqnkuIDogYwiKTsNCiAgICB9DQp9",
     result: {
       status: 3,
       output: "黄岩一职",
     },
   },
-  java: {
-    encoded:
-      "cHVibGljIGNsYXNzIE1haW4gew0KICAgIHB1YmxpYyBzdGF0aWMgdm9pZCBtYWluKFN0cmluZ1tdIGFyZ3MpIHsNCiAgICAgICAgU3lzdGVtLm91dC5wcmludGxuKCLpu4TlsqnkuIDogYwiKTsNCiAgICB9DQp9",
+  python: {
+    encoded: "cHJpbnQoIum7hOWyqeS4gOiBjCIp",
     result: {
       status: 3,
       output: "黄岩一职",
