@@ -1,5 +1,4 @@
-import { computed, ref, watch } from "vue"
-import copyTextToClipboard from "copy-text-to-clipboard"
+import { computed, reactive, ref, watch } from "vue"
 import { Code, LANGUAGE, Cache, Status } from "../types"
 import { sources } from "../templates"
 import { submit } from "../api"
@@ -17,7 +16,7 @@ const cache: Cache = {
   },
 }
 
-export const code = ref<Code>({
+export const code = reactive<Code>({
   value: cache.code[defaultLanguage].value,
   language: cache.language.value,
 })
@@ -36,18 +35,19 @@ watch(size, (value: number) => {
 })
 
 watch(
-  () => code.value.language,
+  () => code.language,
   (value: LANGUAGE) => {
     cache.language.value = value
-    code.value.value = cache.code[value].value
+    code.value = cache.code[value].value
     output.value = ""
+    status.value = Status.NotStarted
   },
 )
 
 watch(
-  () => code.value.value,
+  () => code.value,
   (value: string) => {
-    cache.code[code.value.language].value = value
+    cache.code[code.language].value = value
   },
 )
 
@@ -56,15 +56,11 @@ watch(input, (value: string) => {
 })
 
 export function init() {
-  code.value.language = cache.language.value
-  code.value.value = cache.code[code.value.language].value
+  code.language = cache.language.value
+  code.value = cache.code[code.language].value
   input.value = cache.input.value
   size.value = cache.fontsize.value
   status.value = Status.NotStarted
-}
-
-export function copy() {
-  copyTextToClipboard(code.value.value)
 }
 
 export function clearInput() {
@@ -72,19 +68,20 @@ export function clearInput() {
 }
 
 export function reset() {
-  code.value.value = sources[code.value.language]
-  cache.code[code.value.language].value = sources[code.value.language]
+  code.value = sources[code.language]
+  cache.code[code.language].value = sources[code.language]
   output.value = ""
   status.value = Status.NotStarted
 }
 
 export async function run() {
   loading.value = true
-  const cleanCode = code.value.value.trim()
+  const cleanCode = code.value.trim()
   if (!cleanCode) return
   output.value = ""
+  status.value = Status.NotStarted
   const result = await submit(
-    { value: cleanCode, language: code.value.language },
+    { value: cleanCode, language: code.language },
     input.value.trim(),
   )
   output.value = result.output || ""
