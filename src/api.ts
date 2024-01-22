@@ -1,5 +1,5 @@
 import axios from "axios"
-import { Code } from "./types"
+import { Code, Submission } from "./types"
 import { deadResults, languageToId } from "./templates"
 
 function getChromeVersion() {
@@ -42,7 +42,7 @@ export async function submit(code: Code, input: string) {
       redirect_stderr_to_stdout: true,
       compiler_options: compilerOptions,
     }
-    const response = await http.post("/submissions", payload, {
+    const response = await http.post<Submission>("/submissions", payload, {
       params: { base64_encoded: true, wait: true },
     })
     const data = response.data

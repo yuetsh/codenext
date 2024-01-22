@@ -13,6 +13,7 @@ import {
   NFlex,
   NIcon,
   NMessageProvider,
+  NInputNumber,
 } from "naive-ui"
 import App from "./App.vue"
 import "normalize.css"
@@ -31,6 +32,7 @@ const naive = create({
     NSplit,
     NFlex,
     NIcon,
+    NInputNumber
   ],
 })
 

@@ -57,7 +57,10 @@ function onChange(v: string) {
 </script>
 <template>
   <div class="container">
-    <div class="title">{{ label }}</div>
+    <n-flex align="center" class="title">
+      <span>{{ label }}</span>
+      <slot name="actions"></slot>
+    </n-flex>
     <Codemirror
       v-model="code"
       indentWithTab
@@ -76,6 +79,10 @@ function onChange(v: string) {
 }
 .title {
   padding: 12px 20px;
+  height: 60px;
+  box-sizing: border-box;
+}
+.title > span {
   font-size: 16px;
 }
 </style>

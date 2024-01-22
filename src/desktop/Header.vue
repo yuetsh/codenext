@@ -1,17 +1,9 @@
 <script setup lang="ts">
-import { useMessage, type SelectOption } from "naive-ui"
+import { type SelectOption } from "naive-ui"
 import { useDark, useToggle } from "@vueuse/core"
 import Play from "../icons/Play.vue"
-import {
-  code,
-  copy,
-  reset,
-  run,
-  loading,
-  changeLanguage,
-} from "../composables/code"
+import { code, size, run, loading } from "../composables/code"
 
-const message = useMessage()
 const isDark = useDark()
 const toggleDark = useToggle(isDark)
 
@@ -19,11 +11,6 @@ const languages: SelectOption[] = [
   { value: "python", label: "Python" },
   { value: "c", label: "C" },
 ]
-
-function copyAndNotify() {
-  copy()
-  message.success("已经复制好了")
-}
 </script>
 
 <template>
@@ -34,13 +21,21 @@ function copyAndNotify() {
         <n-button @click="toggleDark()">
           {{ isDark ? "浅色" : "深色" }}
         </n-button>
-        <n-button @click="reset">重置</n-button>
-        <n-button @click="copyAndNotify">复制</n-button>
+        <n-input-number
+          v-model:value="size"
+          class="fontSize"
+          placeholder=""
+          :min="20"
+          :max="40"
+          :step="2"
+        >
+          <template #prefix>字号</template>
+        </n-input-number>
         <n-select
           class="select"
+          placeholder=""
           :options="languages"
           v-model:value="code.language"
-          @update:value="changeLanguage"
         />
         <n-button type="primary" @click="run" :loading="loading">
           <template #icon>
@@ -65,5 +60,8 @@ function copyAndNotify() {
 }
 .select {
   width: 100px;
+}
+.fontSize {
+  width: 110px;
 }
 </style>
