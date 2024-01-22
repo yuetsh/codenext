@@ -3,17 +3,18 @@ import copyTextToClipboard from "copy-text-to-clipboard"
 import {
   code,
   size,
-  init,
   input,
   output,
+  status,
+  init,
   reset,
   clearInput,
-  showStatus,
 } from "../composables/code"
-import { showAnalyse, analyse } from "../composables/analyse"
+import { showAnalyse, analyzeError, analyse } from "../composables/analyse"
 import CodeEditor from "../components/CodeEditor.vue"
 import { computed, onMounted } from "vue"
 import { useMessage } from "naive-ui"
+import { Status } from "../types"
 
 onMounted(init)
 
@@ -71,9 +72,16 @@ function copy() {
               :font-size="size"
             >
               <template #actions>
-                <n-popover v-if="showStatus" trigger="click">
+                <n-tag v-if="status === Status.Accepted" type="success">
+                  运行成功
+                </n-tag>
+                <n-tag v-if="showAnalyse" type="warning">运行失败</n-tag>
+                <n-popover
+                  v-if="showAnalyse && code.language === 'python'"
+                  trigger="click"
+                >
                   <template #trigger>
-                    <n-button quaternary type="error" @click="showAnalyse">
+                    <n-button quaternary type="error" @click="analyzeError">
                       推测原因
                     </n-button>
                   </template>

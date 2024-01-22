@@ -1,4 +1,4 @@
-import { computed, reactive, ref, watch } from "vue"
+import { reactive, ref, watch } from "vue"
 import { Code, LANGUAGE, Cache, Status } from "../types"
 import { sources } from "../templates"
 import { submit } from "../api"
@@ -22,13 +22,9 @@ export const code = reactive<Code>({
 })
 export const input = ref(cache.input.value)
 export const output = ref("")
+export const status = ref(Status.NotStarted)
 export const loading = ref(false)
 export const size = ref(24)
-export const status = ref(Status.NotStarted)
-
-export const showStatus = computed(
-  () => ![Status.Accepted, Status.NotStarted].includes(status.value),
-)
 
 watch(size, (value: number) => {
   cache.fontsize.value = value

@@ -16,6 +16,7 @@ import {
   NInputNumber,
   NPopover,
   NTag,
+  NModal,
 } from "naive-ui"
 import App from "./App.vue"
 import "normalize.css"
@@ -37,6 +38,8 @@ const naive = create({
     NInputNumber,
     NPopover,
     NTag,
+    NModal,
+    NInput,
   ],
 })
 

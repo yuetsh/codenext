@@ -43,7 +43,7 @@ const languages: SelectOption[] = [
               <Play />
             </n-icon>
           </template>
-          运行 (F5)
+          运行
         </n-button>
       </n-flex>
     </n-flex>
