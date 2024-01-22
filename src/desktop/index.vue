@@ -8,7 +8,7 @@
     :mask-closable="false"
     title="测试用例文件生成器"
   >
-    <TestPanel />
+    <TestPanel :files="files" />
   </n-modal>
 </template>
 <script lang="ts" setup>
@@ -21,6 +21,9 @@ import { ref } from "vue"
 const { alt_shift_p, ctrl_shift_p, ctrl_shift_z } = useMagicKeys()
 
 const show = ref(false)
+const files = ref(
+  Array.from({ length: 5 }).map(() => ({ in: "", out: "", error: false })),
+)
 
 whenever(alt_shift_p, () => {
   show.value = true

@@ -34,3 +34,9 @@ export interface Submission {
     description: string
   }
 }
+
+export interface File {
+  in: string
+  out: string
+  error: boolean
+}
