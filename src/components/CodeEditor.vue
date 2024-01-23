@@ -56,33 +56,31 @@ function onChange(v: string) {
 }
 </script>
 <template>
-  <div class="container">
-    <n-flex align="center" class="title">
-      <span>{{ label }}</span>
-      <slot name="actions"></slot>
-    </n-flex>
-    <Codemirror
-      v-model="code"
-      indentWithTab
-      :extensions="[styleTheme, lang, isDark ? oneDark : smoothy]"
-      :disabled="props.readonly"
-      :tabSize="4"
-      :placeholder="props.placeholder"
-      :style="{ height: '100%', fontSize: props.fontSize + 'px' }"
-      @change="onChange"
-    />
-  </div>
+  <n-flex align="center" class="header">
+    <span class="title">{{ label }}</span>
+    <slot name="actions"></slot>
+  </n-flex>
+  <Codemirror
+    v-model="code"
+    indentWithTab
+    :extensions="[styleTheme, lang, isDark ? oneDark : smoothy]"
+    :disabled="props.readonly"
+    :tabSize="4"
+    :placeholder="props.placeholder"
+    :style="{
+      height: 'calc(100% - 60px)',
+      fontSize: props.fontSize + 'px',
+    }"
+    @change="onChange"
+  />
 </template>
 <style scoped>
-.container {
-  height: 100%;
-}
-.title {
+.header {
   padding: 12px 20px;
   height: 60px;
   box-sizing: border-box;
 }
-.title > span {
+.title {
   font-size: 16px;
 }
 </style>
