@@ -26,14 +26,9 @@ const menu: DropdownOption[] = [
       <div class="title">徐越的自测猫</div>
       <n-flex align="center">
         <n-dropdown :options="menu">
-          <n-button size="small">操作</n-button>
+          <n-button>操作</n-button>
         </n-dropdown>
-        <n-button
-          size="small"
-          type="primary"
-          :disabled="loading"
-          @click="switchAndRun"
-        >
+        <n-button type="primary" :disabled="loading" @click="switchAndRun">
           运行
         </n-button>
       </n-flex>

@@ -39,15 +39,15 @@ function changeSize(v: number) {
       <n-tab-pane name="setting" tab="设置">
         <n-flex size="large" vertical class="setting">
           <n-flex align="center">
-            <span>主题</span>
+            <span class="label">主题</span>
             <ThemeButton />
           </n-flex>
           <n-flex align="center">
-            <span>语言</span>
+            <span class="label">语言</span>
             <SelectLanguage />
           </n-flex>
           <n-flex align="center">
-            <span>字号</span>
+            <span class="label">字号</span>
             <n-flex align="center">
               <span :style="{ 'font-size': size + 'px' }">{{ size }}</span>
               <n-button @click="changeSize(size - 2)" :disabled="size === 20">
@@ -66,5 +66,8 @@ function changeSize(v: number) {
 <style scoped>
 .setting {
   padding: 0 12px;
+}
+.label {
+  font-size: 16px;
 }
 </style>
