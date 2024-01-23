@@ -8,7 +8,6 @@ import {
   NLayoutContent,
   NLayoutHeader,
   NSelect,
-  NSpace,
   NSplit,
   NFlex,
   NIcon,
@@ -17,6 +16,9 @@ import {
   NPopover,
   NTag,
   NModal,
+  NTabs,
+  NTabPane,
+  NDropdown,
 } from "naive-ui"
 import App from "./App.vue"
 import "normalize.css"
@@ -29,7 +31,6 @@ const naive = create({
     NLayout,
     NLayoutHeader,
     NLayoutContent,
-    NSpace,
     NInput,
     NSelect,
     NSplit,
@@ -40,6 +41,9 @@ const naive = create({
     NTag,
     NModal,
     NInput,
+    NTabs,
+    NTabPane,
+    NDropdown,
   ],
 })
 

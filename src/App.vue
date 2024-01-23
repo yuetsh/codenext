@@ -4,7 +4,11 @@ import { useDark } from "@vueuse/core"
 import Desktop from "./desktop/index.vue"
 import Mobile from "./mobile/index.vue"
 import { isDesktop, isMobile } from "./composables/breakpoints"
+import { onMounted } from "vue"
+import { init } from "./composables/code"
 const isDark = useDark()
+
+onMounted(init)
 </script>
 
 <template>

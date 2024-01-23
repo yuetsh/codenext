@@ -18,9 +18,9 @@ import File from "./File.vue"
 import { useMagicKeys, whenever } from "@vueuse/core"
 import { ref } from "vue"
 
-const { alt_shift_p, ctrl_shift_p, ctrl_shift_z } = useMagicKeys()
-
 const show = ref(false)
+
+const { alt_shift_p, ctrl_shift_p, ctrl_shift_z } = useMagicKeys()
 
 whenever(alt_shift_p, () => {
   show.value = true

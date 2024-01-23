@@ -6,17 +6,14 @@ import {
   input,
   output,
   status,
-  init,
   reset,
   clearInput,
 } from "../composables/code"
 import { showAnalyse, analyzeError, analyse } from "../composables/analyse"
 import CodeEditor from "../components/CodeEditor.vue"
-import { computed, onMounted } from "vue"
+import { computed } from "vue"
 import { useMessage } from "naive-ui"
 import { Status } from "../types"
-
-onMounted(init)
 
 const showInputClearBtn = computed(() => !!input.value)
 const message = useMessage()

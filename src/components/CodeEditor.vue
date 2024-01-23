@@ -10,8 +10,8 @@ import { oneDark } from "../themes/oneDark"
 import { smoothy } from "../themes/smoothy"
 
 interface Props {
-  label: string
   modelValue: string
+  label?: string
   language?: LANGUAGE
   fontSize?: number
   readonly?: boolean
@@ -56,7 +56,7 @@ function onChange(v: string) {
 }
 </script>
 <template>
-  <n-flex align="center" class="header">
+  <n-flex align="center" class="header" v-if="props.label">
     <span class="title">{{ label }}</span>
     <slot name="actions"></slot>
   </n-flex>
@@ -68,7 +68,7 @@ function onChange(v: string) {
     :tabSize="4"
     :placeholder="props.placeholder"
     :style="{
-      height: 'calc(100% - 60px)',
+      height: props.label ? 'calc(100% - 60px)' : '100%',
       fontSize: props.fontSize + 'px',
     }"
     @change="onChange"

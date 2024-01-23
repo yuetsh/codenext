@@ -1,16 +1,7 @@
 <script setup lang="ts">
-import { type SelectOption } from "naive-ui"
-import { useDark, useToggle } from "@vueuse/core"
-import Play from "../icons/Play.vue"
-import { code, size, run, loading } from "../composables/code"
-
-const isDark = useDark()
-const toggleDark = useToggle(isDark)
-
-const languages: SelectOption[] = [
-  { value: "python", label: "Python" },
-  { value: "c", label: "C" },
-]
+import { size, run, loading } from "../composables/code"
+import ThemeButton from "../components/ThemeButton.vue"
+import SelectLanguage from "../components/SelectLanguage.vue"
 </script>
 
 <template>
@@ -18,9 +9,7 @@ const languages: SelectOption[] = [
     <n-flex justify="space-between" align="center">
       <div class="title">徐越的自测猫</div>
       <n-flex>
-        <n-button @click="toggleDark()">
-          {{ isDark ? "浅色" : "深色" }}
-        </n-button>
+        <ThemeButton />
         <n-input-number
           v-model:value="size"
           class="fontSize"
@@ -31,18 +20,8 @@ const languages: SelectOption[] = [
         >
           <template #prefix>字号</template>
         </n-input-number>
-        <n-select
-          class="select"
-          placeholder=""
-          :options="languages"
-          v-model:value="code.language"
-        />
-        <n-button type="primary" @click="run" :loading="loading">
-          <template #icon>
-            <n-icon>
-              <Play />
-            </n-icon>
-          </template>
+        <SelectLanguage />
+        <n-button type="primary" @click="run" :disabled="loading">
           运行
         </n-button>
       </n-flex>
@@ -54,12 +33,10 @@ const languages: SelectOption[] = [
 .header {
   height: 60px;
   padding: 12px;
+  box-sizing: border-box;
 }
 .title {
   font-size: 20px;
-}
-.select {
-  width: 100px;
 }
 .fontSize {
   width: 110px;

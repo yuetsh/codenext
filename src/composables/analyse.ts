@@ -22,6 +22,8 @@ function findError(line: string, language = "python") {
     "NameError: name '(.*?)' is not defined": (name: string) =>
       `命名错误，${name} 不知道是什么东西`,
     "IndentationError: expected an indented block": "缩进错误：这一行需要缩进",
+    'TypeError: can only concatenate str \\(not "(.*?)"\\) to str':
+      "文字和数字不能相加",
   }
   const c: any = {}
   const regex = { c, python }[language]

@@ -40,3 +40,5 @@ export interface File {
   out: string
   error: boolean
 }
+
+export type Tab = "code" | "input" | "output" | "setting"

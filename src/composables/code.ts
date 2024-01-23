@@ -3,13 +3,14 @@ import { Code, LANGUAGE, Cache, Status } from "../types"
 import { sources } from "../templates"
 import { submit } from "../api"
 import { useStorage } from "@vueuse/core"
+import { isMobile } from "./breakpoints"
 
 const defaultLanguage = "python"
 
 const cache: Cache = {
   language: useStorage<LANGUAGE>("code_language", defaultLanguage),
   input: useStorage("code_input", ""),
-  fontsize: useStorage("fontsize", 24),
+  fontsize: useStorage("fontsize", isMobile.value ? 20 : 24),
   code: {
     python: useStorage("code_python", sources["python"]),
     c: useStorage("code_c", sources["c"]),
@@ -24,7 +25,7 @@ export const input = ref(cache.input.value)
 export const output = ref("")
 export const status = ref(Status.NotStarted)
 export const loading = ref(false)
-export const size = ref(24)
+export const size = ref(cache.fontsize)
 
 watch(size, (value: number) => {
   cache.fontsize.value = value
