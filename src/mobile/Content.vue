@@ -1,10 +1,13 @@
 <script lang="ts" setup>
 import CodeEditor from "../components/CodeEditor.vue"
-import { code, input, output, size } from "../composables/code"
+import { code, input, output, size, status } from "../composables/code"
+import { Status } from "../types"
 import { tab } from "../composables/tab"
 import { Tab } from "../types"
 import ThemeButton from "../components/ThemeButton.vue"
 import SelectLanguage from "../components/SelectLanguage.vue"
+import { useThemeVars } from "naive-ui"
+import { computed } from "vue"
 
 function onChange(v: Tab) {
   tab.value = v
@@ -14,6 +17,12 @@ function changeSize(v: number) {
   if (v > 40 || v < 20) return
   size.value = v
 }
+const theme = useThemeVars()
+const color = computed(() => {
+  if (status.value === Status.NotStarted) return theme.value.textColorBase
+  else if (status.value === Status.Accepted) return theme.value.primaryColor
+  else return theme.value.warningColor
+})
 </script>
 <template>
   <n-layout-content>
@@ -33,7 +42,10 @@ function changeSize(v: number) {
       <n-tab-pane name="input" tab="输入">
         <CodeEditor v-model:model-value="input" :font-size="size" />
       </n-tab-pane>
-      <n-tab-pane name="output" tab="输出">
+      <n-tab-pane name="output">
+        <template #tab>
+          <span :style="{ color }">输出</span>
+        </template>
         <CodeEditor v-model:model-value="output" readonly :font-size="size" />
       </n-tab-pane>
       <n-tab-pane name="setting" tab="设置">
