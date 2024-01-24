@@ -45,6 +45,7 @@ watch(
   () => code.value,
   (value: string) => {
     cache.code[code.language].value = value
+    if (!code.value) loading.value = true
   },
 )
 
