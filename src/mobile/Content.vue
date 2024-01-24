@@ -6,10 +6,17 @@ import { tab } from "../composables/tab"
 import { Tab } from "../types"
 import ThemeButton from "../components/ThemeButton.vue"
 import SelectLanguage from "../components/SelectLanguage.vue"
+import Helper from "./Helper.vue"
 import { useThemeVars } from "naive-ui"
 import { computed } from "vue"
+import { EditorView } from "@codemirror/view"
+import { insertText } from "../composables/helper"
+import { whenever } from "@vueuse/core"
+import { onUnmounted } from "vue"
 
-function onChange(v: Tab) {
+let codeEditor: EditorView | null = null
+
+function onChangeTab(v: Tab) {
   tab.value = v
 }
 
@@ -23,6 +30,19 @@ const color = computed(() => {
   else if (status.value === Status.Accepted) return theme.value.primaryColor
   else return theme.value.warningColor
 })
+
+function onReady(view: EditorView) {
+  codeEditor = view
+}
+
+whenever(insertText, (text: string) => {
+  if (!codeEditor) return
+  codeEditor.dispatch(codeEditor.state.replaceSelection(text))
+  insertText.value = ""
+})
+onUnmounted(() => {
+  codeEditor = null
+})
 </script>
 <template>
   <n-layout-content>
@@ -30,14 +50,18 @@ const color = computed(() => {
       pane-style="height: calc(100vh - 111px)"
       type="segment"
       :value="tab"
-      @update:value="onChange"
+      @update:value="onChangeTab"
     >
       <n-tab-pane name="code" tab="代码">
-        <CodeEditor
-          v-model:model-value="code.value"
-          :language="code.language"
-          :font-size="size"
-        />
+        <div>
+          <Helper />
+          <CodeEditor
+            v-model:model-value="code.value"
+            :language="code.language"
+            :font-size="size"
+            @ready="onReady"
+          />
+        </div>
       </n-tab-pane>
       <n-tab-pane name="input" tab="输入">
         <CodeEditor v-model:model-value="input" :font-size="size" />

@@ -4,6 +4,7 @@ import { useDark } from "@vueuse/core"
 import { Codemirror } from "vue-codemirror"
 import { cpp } from "@codemirror/lang-cpp"
 import { python } from "@codemirror/lang-python"
+import { EditorState } from "@codemirror/state"
 import { EditorView } from "@codemirror/view"
 import { LANGUAGE } from "../types"
 import { oneDark } from "../themes/oneDark"
@@ -35,7 +36,7 @@ const styleTheme = EditorView.baseTheme({
     outline: "none",
   },
 })
-const emit = defineEmits(["update:modelValue"])
+const emit = defineEmits(["update:modelValue", "ready"])
 
 watch(
   () => props.modelValue,
@@ -53,6 +54,14 @@ const lang = computed(() => {
 
 function onChange(v: string) {
   emit("update:modelValue", v)
+}
+
+function onReady(payload: {
+  view: EditorView
+  state: EditorState
+  container: HTMLDivElement
+}) {
+  emit("ready", payload.view)
 }
 </script>
 <template>
@@ -72,6 +81,7 @@ function onChange(v: string) {
       fontSize: props.fontSize + 'px',
     }"
     @change="onChange"
+    @ready="onReady"
   />
 </template>
 <style scoped>
