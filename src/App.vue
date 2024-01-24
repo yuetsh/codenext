@@ -3,9 +3,10 @@ import { zhCN, dateZhCN, darkTheme } from "naive-ui"
 import { useDark } from "@vueuse/core"
 import Desktop from "./desktop/index.vue"
 import Mobile from "./mobile/index.vue"
-import { isDesktop, isMobile } from "./composables/breakpoints"
+import { isDesktop } from "./composables/breakpoints"
 import { onMounted } from "vue"
 import { init } from "./composables/code"
+
 const isDark = useDark()
 
 onMounted(init)
@@ -20,7 +21,7 @@ onMounted(init)
     <n-message-provider :max="1">
       <n-layout>
         <Desktop v-if="isDesktop" />
-        <Mobile v-if="isMobile" />
+        <Mobile v-else />
       </n-layout>
     </n-message-provider>
   </n-config-provider>
