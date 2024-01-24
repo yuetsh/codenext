@@ -35,6 +35,9 @@ const styleTheme = EditorView.baseTheme({
   "&.cm-editor.cm-focused": {
     outline: "none",
   },
+  "&.cm-editor .cm-tooltip.cm-tooltip-autocomplete ul": {
+    "font-family": "Monaco",
+  },
 })
 const emit = defineEmits(["update:modelValue", "ready"])
 
