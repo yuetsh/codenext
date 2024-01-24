@@ -67,7 +67,7 @@ export async function download() {
   let failed = false
   const data = []
   for (let i = 0; i < files.value.length; i++) {
-    if (files.value[i].error) {
+    if (files.value[i].error || !files.value[i].out) {
       failed = true
       break
     } else {
@@ -83,7 +83,7 @@ export async function download() {
       })
     }
   }
-  if (failed || !data.length) return
+  if (failed) return
   const blob = await downloadZip(data).blob()
   saveAs(blob, "testcase.zip")
 }
