@@ -13,7 +13,6 @@ onMounted(init)
 
 <template>
   <n-config-provider
-    inline-theme-disabled
     :locale="zhCN"
     :date-locale="dateZhCN"
     :theme="isDark ? darkTheme : null"
