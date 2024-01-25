@@ -13,6 +13,7 @@ import { EditorView } from "@codemirror/view"
 import { insertText } from "../composables/helper"
 import { whenever } from "@vueuse/core"
 import { onUnmounted } from "vue"
+import { watch } from "vue"
 
 let codeEditor: EditorView | null = null
 
@@ -38,8 +39,26 @@ function onReady(view: EditorView) {
 whenever(insertText, (text: string) => {
   if (!codeEditor) return
   codeEditor.dispatch(codeEditor.state.replaceSelection(text))
+  codeEditor.focus() // 保持光标选中状态
+  // 处理换行或者移动光标
+  let delta = 0
+  if (text === '""' || text === "''") delta = 1
+  if (text[text.length - 1] === ")") delta = 1
+  if (text[text.length - 1] === ":" && text[text.length - 2] === ")") {
+    delta = 2
+  }
+  if (delta > 0) {
+    const newPos = codeEditor.state.selection.ranges[0].from - delta
+    codeEditor.dispatch({
+      selection: {
+        anchor: newPos,
+        head: newPos,
+      },
+    })
+  }
   insertText.value = ""
 })
+
 onUnmounted(() => {
   codeEditor = null
 })
@@ -53,7 +72,7 @@ onUnmounted(() => {
       @update:value="onChangeTab"
     >
       <n-tab-pane name="code" tab="代码">
-        <div>
+        <n-flex vertical class="wrapper">
           <Helper />
           <CodeEditor
             v-model:model-value="code.value"
@@ -61,7 +80,7 @@ onUnmounted(() => {
             :font-size="size"
             @ready="onReady"
           />
-        </div>
+        </n-flex>
       </n-tab-pane>
       <n-tab-pane name="input" tab="输入">
         <CodeEditor v-model:model-value="input" :font-size="size" />
@@ -105,5 +124,8 @@ onUnmounted(() => {
 }
 .label {
   font-size: 16px;
+}
+.wrapper {
+  height: 100%;
 }
 </style>

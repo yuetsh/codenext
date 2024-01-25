@@ -80,7 +80,7 @@ function onReady(payload: {
     :tabSize="4"
     :placeholder="props.placeholder"
     :style="{
-      height: props.label ? 'calc(100% - 60px)' : '100%',
+      height: !!props.label ? 'calc(100% - 60px)' : '100%',
       fontSize: props.fontSize + 'px',
     }"
     @change="onChange"

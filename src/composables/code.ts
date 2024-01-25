@@ -24,7 +24,7 @@ export const code = reactive<Code>({
 export const input = ref(cache.input.value)
 export const output = ref("")
 export const status = ref(Status.NotStarted)
-export const loading = ref(false)
+export const loading = ref(!code.value)
 export const size = ref(cache.fontsize)
 
 watch(size, (value: number) => {
@@ -45,7 +45,7 @@ watch(
   () => code.value,
   (value: string) => {
     cache.code[code.language].value = value
-    if (!code.value) loading.value = true
+    loading.value = !value
   },
 )
 

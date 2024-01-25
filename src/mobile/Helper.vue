@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { insertText } from "../composables/helper"
+import { cTexts, insertText, pythonTexts } from "../composables/helper"
 import { code } from "../composables/code"
 import { computed } from "vue"
 
@@ -7,29 +7,20 @@ function insert(text: string) {
   insertText.value = text
 }
 
-const texts = computed(() => {
-  if (code.language === "c") return [",", ";", "printf();", "{\n}", "int", "%d"]
-  else
-    return [
-      ":",
-      "=",
-      "==",
-      "print()",
-      "input()",
-      "if",
-      "else",
-      "elif",
-      "for",
-      "in",
-      "range",
-      "while",
-    ]
-})
+const texts = computed(
+  () => ({ c: cTexts, python: pythonTexts })[code.language],
+)
 </script>
 <template>
   <n-flex align="center" class="container" wrap>
     <span>编程助手</span>
-    <n-button v-for="it in texts" :key="it" size="small" @click="insert(it)">
+    <n-button
+      secondary
+      v-for="it in texts"
+      :key="it"
+      size="small"
+      @click="insert(it)"
+    >
       {{ it }}
     </n-button>
   </n-flex>
@@ -37,6 +28,5 @@ const texts = computed(() => {
 <style scoped>
 .container {
   padding: 0 10px;
-  margin-bottom: 10px;
 }
 </style>
