@@ -48,6 +48,8 @@ whenever(insertText, (text: string) => {
   if (text === "{}") delta = 1
   // range():
   if (text.slice(len - 2) === "):") delta = 2
+  // printf(""); scanf("");
+  if (text.slice(len - 3) === '");') delta = 3
   if (delta > 0) {
     const pos = codeEditor.state.selection.main.head - delta
     codeEditor.dispatch({

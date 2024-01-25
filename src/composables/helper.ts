@@ -5,7 +5,8 @@ export const insertText = ref("")
 export const cTexts = [
   ",",
   ";",
-  "printf();",
+  'printf("");',
+  'scanf("");',
   "{\n}",
   "int",
   "%d",
