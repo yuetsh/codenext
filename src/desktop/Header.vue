@@ -22,7 +22,7 @@ import SelectLanguage from "../components/SelectLanguage.vue"
         </n-input-number>
         <SelectLanguage />
         <n-button type="primary" @click="run" :disabled="loading">
-          运行
+          运行 (F5)
         </n-button>
       </n-flex>
     </n-flex>
