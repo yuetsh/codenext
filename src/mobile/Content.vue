@@ -134,6 +134,6 @@ onUnmounted(() => {
 }
 .wrapper {
   height: 100%;
-  overflow: hidden;
+  overflow: scroll;
 }
 </style>
