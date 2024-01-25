@@ -8,7 +8,6 @@ export default defineConfig({
       output: {
         manualChunks: {
           file: ["file-saver", "client-zip"],
-          fancy: ["node-emoji"],
           editor: [
             "vue-codemirror",
             "codemirror",
