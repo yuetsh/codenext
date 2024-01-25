@@ -39,23 +39,25 @@ function onReady(view: EditorView) {
 whenever(insertText, (text: string) => {
   if (!codeEditor) return
   codeEditor.dispatch(codeEditor.state.replaceSelection(text))
-  codeEditor.focus() // 保持光标选中状态
   // 处理换行或者移动光标
   let delta = 0
-  if (text === '""' || text === "''") delta = 1
-  if (text[text.length - 1] === ")") delta = 1
-  if (text[text.length - 1] === ":" && text[text.length - 2] === ")") {
-    delta = 2
-  }
+  const len = text.length
+  // "", [], ()
+  if (['"', "]", ")"].includes(text[len - 1])) delta = 1
+  // {}
+  if (text === "{}") delta = 1
+  // range():
+  if (text.slice(len - 2) === "):") delta = 2
   if (delta > 0) {
-    const newPos = codeEditor.state.selection.ranges[0].from - delta
+    const pos = codeEditor.state.selection.main.head - delta
     codeEditor.dispatch({
       selection: {
-        anchor: newPos,
-        head: newPos,
+        anchor: pos,
+        head: pos,
       },
     })
   }
+  codeEditor.focus() // 保持光标选中状态
   insertText.value = ""
 })
 
