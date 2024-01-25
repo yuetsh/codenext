@@ -17,6 +17,7 @@ import Content from "./Content.vue"
 import File from "./File.vue"
 import { useMagicKeys, whenever } from "@vueuse/core"
 import { ref } from "vue"
+import { run } from "../composables/code"
 
 const show = ref(false)
 
@@ -31,4 +32,29 @@ whenever(ctrl_shift_p, () => {
 whenever(ctrl_shift_z, () => {
   show.value = true
 })
+
+const { ctrl_s } = useMagicKeys({
+  passive: false,
+  onEventFired(e) {
+    if (e.ctrlKey && e.key === "s" && e.type === "keydown") e.preventDefault()
+  },
+})
+
+const { ctrl_r } = useMagicKeys({
+  passive: false,
+  onEventFired(e) {
+    if (e.ctrlKey && e.key === "r" && e.type === "keydown") e.preventDefault()
+  },
+})
+
+const { f5 } = useMagicKeys({
+  passive: false,
+  onEventFired(e) {
+    if (e.key === "F5" && e.type === "keydown") e.preventDefault()
+  },
+})
+
+whenever(ctrl_s, () => {})
+whenever(ctrl_r, () => {})
+whenever(f5, run)
 </script>
