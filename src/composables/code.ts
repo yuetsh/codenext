@@ -4,6 +4,9 @@ import { sources } from "../templates"
 import { submit } from "../api"
 import { useStorage } from "@vueuse/core"
 import { isMobile } from "./breakpoints"
+import { atou, utoa } from "../utils"
+import copyTextToClipboard from "copy-text-to-clipboard"
+import queryString from "query-string"
 
 const defaultLanguage = "python"
 
@@ -18,14 +21,14 @@ const cache: Cache = {
 }
 
 export const code = reactive<Code>({
-  value: cache.code[defaultLanguage].value,
-  language: cache.language.value,
+  value: sources[defaultLanguage],
+  language: defaultLanguage,
 })
-export const input = ref(cache.input.value)
+export const input = ref("")
 export const output = ref("")
 export const status = ref(Status.NotStarted)
-export const loading = ref(!code.value)
-export const size = ref(cache.fontsize)
+export const loading = ref(false)
+export const size = ref(0)
 
 watch(size, (value: number) => {
   cache.fontsize.value = value
@@ -59,6 +62,16 @@ export function init() {
   input.value = cache.input.value
   size.value = cache.fontsize.value
   status.value = Status.NotStarted
+
+  const parsed = queryString.parse(location.search)
+  const base64 = parsed.share as string
+  if (!base64) return
+  try {
+    const data = JSON.parse(atou(base64))
+    code.language = data.lang
+    code.value = data.code
+    input.value = data.input
+  } catch (err) {}
 }
 
 export function clearInput() {
@@ -85,4 +98,16 @@ export async function run() {
   output.value = result.output || ""
   status.value = result.status
   loading.value = false
+}
+
+export function share() {
+  const data = {
+    lang: code.language,
+    code: code.value,
+    input: input.value,
+  }
+  const base64 = utoa(JSON.stringify(data))
+  copyTextToClipboard(
+    queryString.stringifyUrl({ url: location.href, query: { share: base64 } }),
+  )
 }

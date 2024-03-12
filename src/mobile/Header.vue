@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { useMessage, type DropdownOption } from "naive-ui"
-import { code, loading, reset, run } from "../composables/code"
+import { code, loading, reset, run, share } from "../composables/code"
 import { tab } from "../composables/tab"
 import copyTextToClipboard from "copy-text-to-clipboard"
 
@@ -15,9 +15,15 @@ function copy() {
   message.success("已经复制好了")
 }
 
+function handleShare() {
+  share()
+  message.success("分享链接已复制")
+}
+
 const menu: DropdownOption[] = [
   { label: "复制", key: "copy", props: { onClick: copy } },
   { label: "重置", key: "reset", props: { onClick: reset } },
+  { label: "分享", key: "share", props: { onClick: handleShare } },
 ]
 </script>
 <template>

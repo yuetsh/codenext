@@ -1,7 +1,15 @@
 <script setup lang="ts">
-import { size, run, loading } from "../composables/code"
+import { size, run, loading, share } from "../composables/code"
 import ThemeButton from "../components/ThemeButton.vue"
 import SelectLanguage from "../components/SelectLanguage.vue"
+import { useMessage } from "naive-ui"
+
+const message = useMessage()
+
+function handleShare() {
+  share()
+  message.success("分享链接已复制")
+}
 </script>
 
 <template>
@@ -9,6 +17,7 @@ import SelectLanguage from "../components/SelectLanguage.vue"
     <n-flex justify="space-between" align="center">
       <div class="title">徐越的自测猫</div>
       <n-flex>
+        <n-button @click="handleShare">分享</n-button>
         <ThemeButton />
         <n-input-number
           v-model:value="size"
