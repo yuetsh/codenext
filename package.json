@@ -10,28 +10,28 @@
   },
   "dependencies": {
     "@codemirror/lang-cpp": "^6.0.2",
-    "@codemirror/lang-python": "^6.1.5",
-    "@vueuse/core": "^10.9.0",
-    "axios": "^1.6.8",
-    "client-zip": "^1.6.3",
+    "@codemirror/lang-python": "^6.1.6",
+    "@vueuse/core": "^10.10.1",
+    "axios": "^1.7.2",
+    "client-zip": "^1.6.4",
     "codemirror": "^6.0.1",
     "copy-text-to-clipboard": "^3.2.0",
     "fflate": "^0.8.2",
     "file-saver": "^2.0.5",
-    "naive-ui": "^2.38.1",
+    "naive-ui": "^2.38.2",
     "normalize.css": "^8.0.1",
     "query-string": "^9.0.0",
-    "vue": "^3.4.21",
+    "vue": "^3.4.27",
     "vue-codemirror": "^6.1.1"
   },
   "devDependencies": {
     "@types/file-saver": "^2.0.7",
-    "@vitejs/plugin-legacy": "^5.3.2",
-    "@vitejs/plugin-vue": "^5.0.4",
-    "prettier": "^3.2.5",
-    "terser": "^5.30.3",
-    "typescript": "^5.4.4",
-    "vite": "^5.2.8",
-    "vue-tsc": "^2.0.11"
+    "@vitejs/plugin-legacy": "^5.4.1",
+    "@vitejs/plugin-vue": "^5.0.5",
+    "prettier": "^3.3.2",
+    "terser": "^5.31.1",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.13",
+    "vue-tsc": "^2.0.21"
   }
 }
