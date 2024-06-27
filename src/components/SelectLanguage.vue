@@ -1,11 +1,28 @@
 <script lang="ts" setup>
 import { code } from "../composables/code"
 import type { SelectOption } from "naive-ui"
+import { h } from "vue"
 
-const languages: SelectOption[] = [
-  { value: "python", label: "Python" },
-  { value: "c", label: "C" },
+const LANGS = [
+  ["python", "Python"],
+  ["c", "C 语言"],
 ]
+
+const languages: SelectOption[] = LANGS.map((it) => ({
+  value: it[0],
+  label: () => [
+    h("img", {
+      src: `/${it[0]}.svg`,
+      style: {
+        width: "16px",
+        height: "16px",
+        marginRight: "8px",
+        transform: "translateY(3px)",
+      },
+    }),
+    it[1],
+  ],
+}))
 </script>
 <template>
   <n-select
@@ -17,6 +34,6 @@ const languages: SelectOption[] = [
 </template>
 <style scoped>
 .select {
-  width: 100px;
+  width: 120px;
 }
 </style>
