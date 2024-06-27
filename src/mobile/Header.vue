@@ -3,6 +3,7 @@ import { useMessage, type DropdownOption } from "naive-ui"
 import { code, loading, reset, run, share } from "../composables/code"
 import { tab } from "../composables/tab"
 import copyTextToClipboard from "copy-text-to-clipboard"
+import { Icon } from "@iconify/vue"
 
 const message = useMessage()
 function switchAndRun() {
@@ -29,7 +30,10 @@ const menu: DropdownOption[] = [
 <template>
   <n-layout-header class="container" bordered>
     <n-flex justify="space-between" align="center">
-      <div class="title">徐越的自测猫</div>
+      <n-flex align="center">
+        <Icon icon="streamline-emojis:cat" :width="30" :height="30"></Icon>
+        <div class="title">徐越的自测猫</div>
+      </n-flex>
       <n-flex align="center">
         <n-dropdown :options="menu">
           <n-button>操作</n-button>
