@@ -1,6 +1,6 @@
 import { computed, reactive } from "vue"
-import { output, status } from "./code"
 import { Status } from "../types"
+import { output, status } from "./code"
 
 export const analyse = reactive({
   line: -1,

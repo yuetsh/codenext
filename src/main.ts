@@ -1,27 +1,27 @@
-import { createApp } from "vue"
 import {
-  create,
   NButton,
   NConfigProvider,
+  NDropdown,
+  NFlex,
+  NIcon,
   NInput,
+  NInputNumber,
   NLayout,
   NLayoutContent,
   NLayoutHeader,
+  NMessageProvider,
+  NModal,
+  NPopover,
   NSelect,
   NSplit,
-  NFlex,
-  NIcon,
-  NMessageProvider,
-  NInputNumber,
-  NPopover,
-  NTag,
-  NModal,
-  NTabs,
   NTabPane,
-  NDropdown,
+  NTabs,
+  NTag,
+  create,
 } from "naive-ui"
-import App from "./App.vue"
 import "normalize.css"
+import { createApp } from "vue"
+import App from "./App.vue"
 
 const naive = create({
   components: [

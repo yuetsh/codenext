@@ -30,6 +30,7 @@ function copy() {
       <template #1>
         <CodeEditor
           label="代码区"
+          icon="streamline-emojis:lemon"
           :font-size="size"
           v-model="code.value"
           :language="code.language"
@@ -48,7 +49,12 @@ function copy() {
           :max="3 / 5"
         >
           <template #1>
-            <CodeEditor label="输入框" :font-size="size" v-model="input">
+            <CodeEditor
+              icon="streamline-emojis:four-leaf-clover"
+              label="输入框"
+              :font-size="size"
+              v-model="input"
+            >
               <template #actions>
                 <n-button
                   quaternary
@@ -63,6 +69,7 @@ function copy() {
           </template>
           <template #2>
             <CodeEditor
+              icon="streamline-emojis:hibiscus"
               label="输出框"
               v-model="output"
               readonly

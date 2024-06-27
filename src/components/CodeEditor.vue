@@ -9,10 +9,12 @@ import { EditorView } from "@codemirror/view"
 import { LANGUAGE } from "../types"
 import { oneDark } from "../themes/oneDark"
 import { smoothy } from "../themes/smoothy"
+import { Icon } from "@iconify/vue"
 
 interface Props {
   modelValue: string
   label?: string
+  icon?: string
   language?: LANGUAGE
   fontSize?: number
   readonly?: boolean
@@ -20,6 +22,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  label: "",
   language: "python",
   fontSize: 24,
   readonly: false,
@@ -69,6 +72,7 @@ function onReady(payload: {
 </script>
 <template>
   <n-flex align="center" class="header" v-if="props.label">
+    <Icon v-if="icon" :icon="icon" :width="24" :height="24"></Icon>
     <span class="title">{{ label }}</span>
     <slot name="actions"></slot>
   </n-flex>

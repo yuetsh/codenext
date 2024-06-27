@@ -1,12 +1,12 @@
-import { reactive, ref, watch } from "vue"
-import { Code, LANGUAGE, Cache, Status } from "../types"
-import { sources } from "../templates"
-import { submit } from "../api"
 import { useStorage } from "@vueuse/core"
-import { isMobile } from "./breakpoints"
-import { atou, utoa } from "../utils"
 import copyTextToClipboard from "copy-text-to-clipboard"
 import queryString from "query-string"
+import { reactive, ref, watch } from "vue"
+import { submit } from "../api"
+import { sources } from "../templates"
+import { Cache, Code, LANGUAGE, Status } from "../types"
+import { atou, utoa } from "../utils"
+import { isMobile } from "./breakpoints"
 
 const defaultLanguage = "python"
 

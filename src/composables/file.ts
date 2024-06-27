@@ -1,8 +1,8 @@
+import { downloadZip } from "client-zip"
+import saveAs from "file-saver"
 import { ref } from "vue"
 import { submit } from "../api"
 import { code } from "./code"
-import { downloadZip } from "client-zip"
-import saveAs from "file-saver"
 
 export const files = ref(
   Array.from({ length: 5 }).map(() => ({ in: "", out: "", error: false })),

@@ -1,6 +1,6 @@
 import axios from "axios"
-import { Code, Submission } from "./types"
 import { deadResults, languageToId } from "./templates"
+import { Code, Submission } from "./types"
 
 function getChromeVersion() {
   var raw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./)
