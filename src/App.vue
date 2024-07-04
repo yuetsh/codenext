@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { zhCN, dateZhCN, darkTheme } from "naive-ui"
 import { useDark } from "@vueuse/core"
+import { darkTheme, dateZhCN, zhCN } from "naive-ui"
+import { onMounted } from "vue"
+import { isDesktop } from "./composables/breakpoints"
+import { init } from "./composables/code"
 import Desktop from "./desktop/index.vue"
 import Mobile from "./mobile/index.vue"
-import { isDesktop } from "./composables/breakpoints"
-import { onMounted } from "vue"
-import { init } from "./composables/code"
 
 const isDark = useDark()
 

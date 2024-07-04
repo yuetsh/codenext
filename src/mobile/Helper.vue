@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { cTexts, insertText, pythonTexts } from "../composables/helper"
-import { code } from "../composables/code"
 import { computed } from "vue"
+import { code } from "../composables/code"
+import { cTexts, insertText, pythonTexts } from "../composables/helper"
 
 function insert(text: string) {
   insertText.value = text

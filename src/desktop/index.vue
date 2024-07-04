@@ -12,12 +12,12 @@
   </n-modal>
 </template>
 <script lang="ts" setup>
-import Header from "./Header.vue"
-import Content from "./Content.vue"
-import File from "./File.vue"
 import { useMagicKeys, whenever } from "@vueuse/core"
 import { ref } from "vue"
 import { run } from "../composables/code"
+import Content from "./Content.vue"
+import File from "./File.vue"
+import Header from "./Header.vue"
 
 const show = ref(false)
 

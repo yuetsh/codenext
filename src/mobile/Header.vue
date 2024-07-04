@@ -1,9 +1,9 @@
 <script lang="ts" setup>
+import { Icon } from "@iconify/vue"
+import copyTextToClipboard from "copy-text-to-clipboard"
 import { useMessage, type DropdownOption } from "naive-ui"
 import { code, loading, reset, run, share } from "../composables/code"
 import { tab } from "../composables/tab"
-import copyTextToClipboard from "copy-text-to-clipboard"
-import { Icon } from "@iconify/vue"
 
 const message = useMessage()
 function switchAndRun() {

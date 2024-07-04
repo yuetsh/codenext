@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import {
-  files,
   addFive,
-  run,
   download,
+  files,
   onChange,
   remove,
   reset,
+  run,
 } from "../composables/file"
 </script>
 <template>

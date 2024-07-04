@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { size, run, loading, share } from "../composables/code"
-import ThemeButton from "../components/ThemeButton.vue"
-import SelectLanguage from "../components/SelectLanguage.vue"
-import { useMessage } from "naive-ui"
 import { Icon } from "@iconify/vue"
+import { useMessage } from "naive-ui"
+import SelectLanguage from "../components/SelectLanguage.vue"
+import ThemeButton from "../components/ThemeButton.vue"
+import { loading, run, share, size } from "../composables/code"
 
 const message = useMessage()
 

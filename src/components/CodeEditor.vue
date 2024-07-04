@@ -1,15 +1,15 @@
 <script lang="ts" setup>
-import { computed, ref, watch } from "vue"
-import { useDark } from "@vueuse/core"
-import { Codemirror } from "vue-codemirror"
 import { cpp } from "@codemirror/lang-cpp"
 import { python } from "@codemirror/lang-python"
 import { EditorState } from "@codemirror/state"
 import { EditorView } from "@codemirror/view"
-import { LANGUAGE } from "../types"
+import { Icon } from "@iconify/vue"
+import { useDark } from "@vueuse/core"
+import { computed, ref, watch } from "vue"
+import { Codemirror } from "vue-codemirror"
 import { oneDark } from "../themes/oneDark"
 import { smoothy } from "../themes/smoothy"
-import { Icon } from "@iconify/vue"
+import { LANGUAGE } from "../types"
 
 interface Props {
   modelValue: string

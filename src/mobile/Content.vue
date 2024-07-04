@@ -1,17 +1,16 @@
 <script lang="ts" setup>
-import { onUnmounted, computed } from "vue"
 import { EditorView } from "@codemirror/view"
 import { whenever } from "@vueuse/core"
 import { useThemeVars } from "naive-ui"
+import { computed, onUnmounted } from "vue"
 import CodeEditor from "../components/CodeEditor.vue"
-import ThemeButton from "../components/ThemeButton.vue"
 import SelectLanguage from "../components/SelectLanguage.vue"
-import Helper from "./Helper.vue"
+import ThemeButton from "../components/ThemeButton.vue"
 import { code, input, output, size, status } from "../composables/code"
-import { Status } from "../types"
-import { tab } from "../composables/tab"
-import { Tab } from "../types"
 import { insertText } from "../composables/helper"
+import { tab } from "../composables/tab"
+import { Status, Tab } from "../types"
+import Helper from "./Helper.vue"
 
 let codeEditor: EditorView | null = null
 

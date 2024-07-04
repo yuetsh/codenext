@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { code } from "../composables/code"
 import type { SelectOption } from "naive-ui"
 import { h } from "vue"
+import { code } from "../composables/code"
 
 const LANGS = [
   ["python", "Python"],

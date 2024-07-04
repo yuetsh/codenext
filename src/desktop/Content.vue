@@ -1,18 +1,18 @@
 <script lang="ts" setup>
 import copyTextToClipboard from "copy-text-to-clipboard"
+import { useMessage } from "naive-ui"
+import { computed } from "vue"
+import CodeEditor from "../components/CodeEditor.vue"
+import { analyse, analyzeError, showAnalyse } from "../composables/analyse"
 import {
+  clearInput,
   code,
-  size,
   input,
   output,
-  status,
   reset,
-  clearInput,
+  size,
+  status,
 } from "../composables/code"
-import { showAnalyse, analyzeError, analyse } from "../composables/analyse"
-import CodeEditor from "../components/CodeEditor.vue"
-import { computed } from "vue"
-import { useMessage } from "naive-ui"
 import { Status } from "../types"
 
 const showInputClearBtn = computed(() => !!input.value)
