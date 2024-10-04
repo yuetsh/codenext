@@ -23,7 +23,7 @@ function handleShare() {
 
 const menu: DropdownOption[] = [
   { label: "复制", key: "copy", props: { onClick: copy } },
-  { label: "重置", key: "reset", props: { onClick: reset } },
+  { label: "清空", key: "reset", props: { onClick: reset } },
   { label: "分享", key: "share", props: { onClick: handleShare } },
 ]
 </script>

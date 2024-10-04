@@ -12,7 +12,7 @@ import {
 <template>
   <n-flex vertical>
     <n-flex>
-      <n-button @click="reset">重置</n-button>
+      <n-button @click="reset">清空</n-button>
       <n-button @click="addFive">增加5个</n-button>
       <n-button @click="run">先运行</n-button>
       <n-button @click="download">再下载</n-button>

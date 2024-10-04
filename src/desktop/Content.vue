@@ -37,7 +37,7 @@ function copy() {
         >
           <template #actions>
             <n-button quaternary type="primary" @click="copy">复制</n-button>
-            <n-button quaternary @click="reset">重置</n-button>
+            <n-button quaternary @click="reset">清空</n-button>
           </template>
         </CodeEditor>
       </template>
