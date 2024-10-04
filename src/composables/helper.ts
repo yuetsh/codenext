@@ -2,15 +2,15 @@ import { ref } from "vue"
 
 export const insertText = ref("")
 
-export const cTexts = [
+export const cSymbols = [
   ";",
   ",",
   "&",
   "{}",
-  " = ",
-  " == ",
-  " > ",
-  " < ",
+  "=",
+  "==",
+  ">",
+  "<",
   " != ",
   " || ",
   " && ",
@@ -22,27 +22,46 @@ export const cTexts = [
   "%d",
   "%.2f",
   "if () {}",
-  " else ",
+  "else {}",
+  "a",
+  "b",
+  "c",
+  "\n",
 ]
 
-export const pythonTexts = [
+export const pythonSymbols = [
   ":",
   '""',
-  " = ",
-  " == ",
-  " > ",
-  " < ",
+  ",",
+  "+",
+  "-",
+  "*",
+  "/",
+  "//",
+  "%",
+  "()",
+  "=",
+  "==",
+  ">",
+  "<",
   " != ",
   "print()",
   "input()",
-  "if :",
+  "if ",
   "else:",
-  "elif :",
   "for ",
   " in ",
   "range():",
-  "while",
+  "while ",
   "[]",
-  "{}",
   '"%.2f" % ',
+  "a",
+  "b",
+  "c",
+  "\n",
 ]
+
+export function getText(c: string) {
+  if (c === "\n") return "回车"
+  else return c
+}

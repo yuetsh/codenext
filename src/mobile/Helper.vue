@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { computed } from "vue"
 import { code } from "../composables/code"
-import { cTexts, insertText, pythonTexts } from "../composables/helper"
+import { cSymbols, insertText, pythonSymbols, getText } from "../composables/helper"
 
 function insert(text: string) {
   insertText.value = text
 }
 
 const texts = computed(
-  () => ({ c: cTexts, python: pythonTexts })[code.language],
+  () => ({ c: cSymbols, python: pythonSymbols })[code.language],
 )
 </script>
 <template>
@@ -21,7 +21,7 @@ const texts = computed(
       size="small"
       @click="insert(it)"
     >
-      {{ it }}
+      {{ getText(it) }}
     </n-button>
   </n-flex>
 </template>
