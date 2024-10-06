@@ -25,4 +25,4 @@ jobs:
           ARGS: "-avzr --delete"
           SOURCE: dist/
           REMOTE_USER: root
-          TARGET: /root/Judge0/ide
+          TARGET: /root/Code/build
