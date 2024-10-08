@@ -24,7 +24,9 @@ function decode(bytes?: string) {
   )
 }
 
-const http = axios.create({ baseURL: `${protocol}://judge0api.xuyue.cc` })
+const judge = axios.create({ baseURL: `${protocol}://judge0api.xuyue.cc` })
+const api = axios.create({ baseURL: `${protocol}://codeapi.xuyue.cc` })
+// const api = axios.create({ baseURL: `http://localhost:8080` })
 
 export async function submit(code: Code, input: string) {
   const encodedCode = encode(code.value)
@@ -42,7 +44,7 @@ export async function submit(code: Code, input: string) {
       redirect_stderr_to_stdout: true,
       compiler_options: compilerOptions,
     }
-    const response = await http.post<Submission>("/submissions", payload, {
+    const response = await judge.post<Submission>("/submissions", payload, {
       params: { base64_encoded: true, wait: true },
     })
     const data = response.data
@@ -53,4 +55,24 @@ export async function submit(code: Code, input: string) {
         .trim(),
     }
   }
+}
+
+export async function listCode() {
+  const res = await api.get("/")
+  return res.data
+}
+
+export async function getCodeByQuery(query: string) {
+  const res = await api.get("/" + query)
+  return res.data
+}
+
+export async function createCode(data: { code: string; query: string }) {
+  const res = await api.post("/", data)
+  return res.data
+}
+
+export async function removeCode(id: number) {
+  const res = await api.delete(`/${id}`)
+  console.log(res.data)
 }

@@ -2,7 +2,7 @@ import { useStorage } from "@vueuse/core"
 import copyTextToClipboard from "copy-text-to-clipboard"
 import queryString from "query-string"
 import { reactive, ref, watch } from "vue"
-import { submit } from "../api"
+import { getCodeByQuery, submit } from "../api"
 import { sources } from "../templates"
 import { Cache, Code, LANGUAGE, Status } from "../types"
 import { atou, utoa } from "../utils"
@@ -56,7 +56,7 @@ watch(input, (value: string) => {
   cache.input.value = value
 })
 
-export function init() {
+export async function init() {
   code.language = cache.language.value
   code.value = cache.code[code.language].value
   input.value = cache.input.value
@@ -65,13 +65,21 @@ export function init() {
 
   const parsed = queryString.parse(location.search)
   const base64 = parsed.share as string
-  if (!base64) return
-  try {
-    const data = JSON.parse(atou(base64))
-    code.language = data.lang
-    code.value = data.code
-    input.value = data.input
-  } catch (err) {}
+  if (base64) {
+    try {
+      const data = JSON.parse(atou(base64))
+      code.language = data.lang
+      code.value = data.code
+      input.value = data.input
+    } catch (err) {}
+  }
+  const preset = parsed.query as string
+  if (preset) {
+    try {
+      const result = await getCodeByQuery(preset)
+      code.value = result.data.code
+    } catch (err) {}
+  }
 }
 
 export function clearInput() {
