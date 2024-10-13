@@ -1,5 +1,5 @@
 import axios from "axios"
-import { deadResults, languageToId } from "./templates"
+import { languageToId } from "./templates"
 import { Code, Submission } from "./types"
 
 function getChromeVersion() {
@@ -26,34 +26,29 @@ function decode(bytes?: string) {
 
 const judge = axios.create({ baseURL: `${protocol}://judge0api.xuyue.cc` })
 const api = axios.create({ baseURL: `${protocol}://codeapi.xuyue.cc` })
-// const api = axios.create({ baseURL: `http://localhost:8080` })
 
 export async function submit(code: Code, input: string) {
   const encodedCode = encode(code.value)
 
-  if (encodedCode === deadResults[code.language].encoded) {
-    return deadResults[code.language].result
-  } else {
-    const id = languageToId[code.language]
-    let compilerOptions = ""
-    if (id === 50) compilerOptions = "-lm" // 解决 GCC 的链接问题
-    const payload = {
-      source_code: encodedCode,
-      language_id: id,
-      stdin: encode(input),
-      redirect_stderr_to_stdout: true,
-      compiler_options: compilerOptions,
-    }
-    const response = await judge.post<Submission>("/submissions", payload, {
-      params: { base64_encoded: true, wait: true },
-    })
-    const data = response.data
-    return {
-      status: data.status && data.status.id,
-      output: [decode(data.compile_output), decode(data.stdout)]
-        .join("\n")
-        .trim(),
-    }
+  const id = languageToId[code.language]
+  let compilerOptions = ""
+  if (id === 50) compilerOptions = "-lm" // 解决 GCC 的链接问题
+  const payload = {
+    source_code: encodedCode,
+    language_id: id,
+    stdin: encode(input),
+    redirect_stderr_to_stdout: true,
+    compiler_options: compilerOptions,
+  }
+  const response = await judge.post<Submission>("/submissions", payload, {
+    params: { base64_encoded: true, wait: true },
+  })
+  const data = response.data
+  return {
+    status: data.status && data.status.id,
+    output: [decode(data.compile_output), decode(data.stdout)]
+      .join("\n")
+      .trim(),
   }
 }
 
