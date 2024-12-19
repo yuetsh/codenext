@@ -1,26 +1,23 @@
 <template>
   <n-flex vertical size="large">
     <n-flex v-if="code.value">
-      <n-flex align="center">
-        <span>复制当前代码，输入 Query</span>
-        <div>
-          <n-input v-model:value="query" />
-        </div>
-      </n-flex>
+      <div>
+        <n-input v-model:value="query" />
+      </div>
       <n-button type="primary" @click="create" :disabled="!query.length">
         新建
       </n-button>
     </n-flex>
-    <span v-else style="color: red">当前无代码</span>
+    <div v-else style="color: red">当前无代码</div>
     <n-flex>
-      <div style="margin-top: 6px" v-if="codes.length">已有的 Query</div>
+      <div style="margin-top: 6px" v-if="codes.length">已有的</div>
       <n-tag
         v-for="item in codes"
         :key="item.query"
         closable
         size="large"
         round
-        @click="show(item.code)"
+        @click="show(item.code, item.query)"
         @close="remove(item.id)"
       >
         {{ item.query }}
@@ -33,6 +30,7 @@ import { useMessage } from "naive-ui"
 import { onMounted, ref } from "vue"
 import { createCode, listCode, removeCode } from "../api"
 import { code } from "../composables/code"
+import qs from "query-string"
 
 const message = useMessage()
 
@@ -56,8 +54,10 @@ async function remove(id: number) {
   list()
 }
 
-function show(codeStr: string) {
+function show(codeStr: string, query: string) {
   code.value = codeStr
+  const url = qs.stringifyUrl({ url: location.href, query: { query } })
+  window.location.href = url
 }
 
 async function list() {

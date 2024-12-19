@@ -1,6 +1,6 @@
 import { useStorage } from "@vueuse/core"
 import copyTextToClipboard from "copy-text-to-clipboard"
-import queryString from "query-string"
+import qs from "query-string"
 import { reactive, ref, watch } from "vue"
 import { getCodeByQuery, submit } from "../api"
 import { sources } from "../templates"
@@ -63,7 +63,7 @@ export async function init() {
   size.value = cache.fontsize.value
   status.value = Status.NotStarted
 
-  const parsed = queryString.parse(location.search)
+  const parsed = qs.parse(location.search)
   const base64 = parsed.share as string
   if (base64) {
     try {
@@ -91,10 +91,8 @@ export function reset() {
   cache.code[code.language].value = sources[code.language]
   output.value = ""
   status.value = Status.NotStarted
-  const u = new URL(window.location.href)
-  u.hash = ""
-  u.search = ""
-  window.location.href = u.href
+  const url = qs.exclude(location.href, ["query"])
+  window.location.href = url
 }
 
 export async function run() {
@@ -120,6 +118,6 @@ export function share() {
   }
   const base64 = utoa(JSON.stringify(data))
   copyTextToClipboard(
-    queryString.stringifyUrl({ url: location.href, query: { share: base64 } }),
+    qs.stringifyUrl({ url: location.href, query: { share: base64 } }),
   )
 }
