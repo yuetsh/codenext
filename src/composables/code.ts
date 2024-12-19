@@ -91,6 +91,10 @@ export function reset() {
   cache.code[code.language].value = sources[code.language]
   output.value = ""
   status.value = Status.NotStarted
+  const u = new URL(window.location.href)
+  u.hash = ""
+  u.search = ""
+  window.location.href = u.href
 }
 
 export async function run() {
