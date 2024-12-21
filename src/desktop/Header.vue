@@ -25,7 +25,7 @@ function handleDebug() {
         <div class="title">徐越的自测猫</div>
       </n-flex>
       <n-flex>
-        <n-button quaternary type="error" v-if="code.language === 'python'" @click="handleDebug">
+        <n-button quaternary type="error" v-if="code.value && code.language === 'python'" @click="handleDebug">
           调试
         </n-button>
         <n-button quaternary @click="handleShare">分享</n-button>
