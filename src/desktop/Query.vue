@@ -27,10 +27,10 @@
 </template>
 <script setup lang="ts">
 import { useMessage } from "naive-ui"
+import qs from "query-string"
 import { onMounted, ref } from "vue"
 import { createCode, listCode, removeCode } from "../api"
 import { code } from "../composables/code"
-import qs from "query-string"
 
 const message = useMessage()
 

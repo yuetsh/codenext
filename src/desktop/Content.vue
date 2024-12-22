@@ -7,6 +7,7 @@ import { analyse, analyzeError, showAnalyse } from "../composables/analyse"
 import {
   clearInput,
   code,
+  debug,
   input,
   output,
   reset,
@@ -22,6 +23,9 @@ function copy() {
   copyTextToClipboard(code.value)
   message.success("已经复制好了")
 }
+function handleDebug() {
+  debug.value = true
+}
 </script>
 
 <template>
@@ -36,6 +40,14 @@ function copy() {
           :language="code.language"
         >
           <template #actions>
+            <n-button
+              quaternary
+              type="error"
+              v-if="code.value && code.language === 'python'"
+              @click="handleDebug"
+            >
+              调试
+            </n-button>
             <n-button quaternary type="primary" @click="copy">复制</n-button>
             <n-button quaternary @click="reset">清空</n-button>
           </template>

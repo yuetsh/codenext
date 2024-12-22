@@ -1,12 +1,30 @@
 <template>
-  <iframe width="100%" height="350" frameborder="0" :src="src"> </iframe>
+  <div class="loading" v-if="loading">正在加载中...（第一次打开会有点慢）</div>
+  <div v-if="!loading">
+    <p class="tip">提醒：</p>
+    <p>1. 点击【下一步】开始调试（也可以拖动进度条）</p>
+    <p>
+      2. 点击
+      <n-button text type="primary" @click="close">修改代码</n-button>
+      完成修改后可再次调试
+    </p>
+  </div>
+  <iframe
+    width="100%"
+    height="350"
+    frameborder="0"
+    :src="src"
+    ref="main"
+  ></iframe>
 </template>
 <script lang="ts" setup>
 import qs from "query-string"
-import { onMounted, ref } from "vue"
-import { code } from "../composables/code"
+import { onMounted, ref, useTemplateRef } from "vue"
+import { code, debug } from "../composables/code"
 
 const src = ref("")
+const loading = ref(true)
+const main = useTemplateRef("main")
 
 onMounted(() => {
   // const url = "http://localhost:8000"
@@ -21,5 +39,22 @@ onMounted(() => {
     "&cumulative=false&curInstr=0&heapPrimitives=nevernest&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=true"
   const query = part1 + part2
   src.value = base + "#" + query
+
+  main.value!.addEventListener("load", () => {
+    loading.value = false
+  })
 })
+
+function close() {
+  debug.value = false
+}
 </script>
+<style scoped>
+.loading {
+  font-size: 16px;
+}
+
+.tip {
+  margin-top: 0;
+}
+</style>

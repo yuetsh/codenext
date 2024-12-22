@@ -3,17 +3,13 @@ import { Icon } from "@iconify/vue"
 import { useMessage } from "naive-ui"
 import SelectLanguage from "../components/SelectLanguage.vue"
 import ThemeButton from "../components/ThemeButton.vue"
-import { code, debug, loading, run, share, size } from "../composables/code"
+import { loading, run, share, size } from "../composables/code"
 
 const message = useMessage()
 
 function handleShare() {
   share()
   message.success("分享链接已复制")
-}
-
-function handleDebug() {
-  debug.value = true
 }
 </script>
 
@@ -25,9 +21,6 @@ function handleDebug() {
         <div class="title">徐越的自测猫</div>
       </n-flex>
       <n-flex>
-        <n-button quaternary type="error" v-if="code.value && code.language === 'python'" @click="handleDebug">
-          调试
-        </n-button>
         <n-button quaternary @click="handleShare">分享</n-button>
         <ThemeButton />
         <n-input-number
