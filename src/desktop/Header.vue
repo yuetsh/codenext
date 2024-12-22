@@ -21,7 +21,7 @@ function handleShare() {
         <div class="title">徐越的自测猫</div>
       </n-flex>
       <n-flex>
-        <n-button quaternary @click="handleShare">分享</n-button>
+        <n-button @click="handleShare">分享</n-button>
         <ThemeButton />
         <n-input-number
           v-model:value="size"

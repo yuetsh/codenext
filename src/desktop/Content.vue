@@ -43,7 +43,8 @@ function handleDebug() {
             <n-button
               quaternary
               type="error"
-              v-if="code.value && code.language === 'python'"
+              :disabled="!code.value"
+              v-if="code.language === 'python'"
               @click="handleDebug"
             >
               调试
