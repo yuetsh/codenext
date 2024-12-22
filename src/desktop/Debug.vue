@@ -11,7 +11,7 @@
   </div>
   <iframe
     width="100%"
-    height="350"
+    height="360"
     frameborder="0"
     :src="src"
     ref="main"
