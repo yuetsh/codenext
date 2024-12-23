@@ -21,14 +21,16 @@
 import qs from "query-string"
 import { onMounted, ref, useTemplateRef } from "vue"
 import { code, debug } from "../composables/code"
+import { useDark } from "@vueuse/core";
 
 const src = ref("")
 const loading = ref(true)
 const main = useTemplateRef("main")
+const isDark = useDark()
 
 onMounted(() => {
-  // const url = "http://localhost:8000"
-  const url = "https://pyviz.xuyue.cc"
+  const url = "http://localhost:8000"
+  // const url = "https://pyviz.xuyue.cc"
   const base = url + "/iframe-embed.html"
 
   const part1 = qs.stringify({
@@ -36,8 +38,11 @@ onMounted(() => {
     codeDivWidth: 300,
   })
   const part2 =
-    "&cumulative=false&curInstr=0&heapPrimitives=nevernest&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=true"
-  const query = part1 + part2
+    "&cumulative=false&curInstr=0&heapPrimitives=nevernest&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=true&"
+  const part3 = qs.stringify({
+    dark: isDark.value,
+  })
+  const query = part1 + part2 + part3
   src.value = base + "#" + query
 
   main.value!.addEventListener("load", () => {
