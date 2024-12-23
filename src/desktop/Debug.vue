@@ -28,7 +28,7 @@ const main = useTemplateRef("main")
 
 onMounted(() => {
   // const url = "http://localhost:8000"
-  const url = "https://pythontutor.xuyue.cc"
+  const url = "https://pyviz.xuyue.cc"
   const base = url + "/iframe-embed.html"
 
   const part1 = qs.stringify({
