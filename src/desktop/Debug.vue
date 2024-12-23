@@ -29,8 +29,8 @@ const main = useTemplateRef("main")
 const isDark = useDark()
 
 onMounted(() => {
-  const url = "http://localhost:8000"
-  // const url = "https://pyviz.xuyue.cc"
+  // const url = "http://localhost:8000"
+  const url = "https://pyviz.xuyue.cc"
   const base = url + "/iframe-embed.html"
 
   const part1 = qs.stringify({
