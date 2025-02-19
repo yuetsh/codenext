@@ -2,14 +2,14 @@ import axios from "axios"
 import { languageToId } from "./templates"
 import { Code, Submission } from "./types"
 
-function getChromeVersion() {
-  var raw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./)
-  return raw ? parseInt(raw[2], 10) : 0
-}
+// function getChromeVersion() {
+//   var raw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./)
+//   return raw ? parseInt(raw[2], 10) : 0
+// }
 
-const isLowVersion = getChromeVersion() < 80
+// const isLowVersion = getChromeVersion() < 80
 
-const protocol = isLowVersion ? "http" : "https"
+// const protocol = isLowVersion ? "http" : "https"
 
 function encode(string?: string) {
   return btoa(String.fromCharCode(...new TextEncoder().encode(string ?? "")))
@@ -24,8 +24,8 @@ function decode(bytes?: string) {
   )
 }
 
-const judge = axios.create({ baseURL: `${protocol}://judge0api.xuyue.cc` })
-const api = axios.create({ baseURL: `${protocol}://codeapi.xuyue.cc` })
+const judge = axios.create({ baseURL: `https://judge0api.xuyue.cc` })
+const api = axios.create({ baseURL: `https://codeapi.xuyue.cc` })
 
 export async function submit(code: Code, input: string) {
   const encodedCode = encode(code.value)
