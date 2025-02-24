@@ -26,11 +26,11 @@
   },
   "devDependencies": {
     "@iconify/vue": "^4.3.0",
-    "@rsbuild/core": "^1.2.9",
+    "@rsbuild/core": "^1.2.11",
     "@rsbuild/plugin-vue": "^1.0.6",
     "@types/file-saver": "^2.0.7",
     "@vitejs/plugin-vue": "^5.2.1",
-    "prettier": "^3.5.1",
+    "prettier": "^3.5.2",
     "prettier-plugin-organize-imports": "^4.1.0",
     "typescript": "^5.7.3",
     "vite": "^6.1.1"
