@@ -13,11 +13,11 @@ export default defineConfig({
   },
   performance: {
     chunkSplit: {
-      strategy: "split-by-experience",
-      forceSplitting: {
-        "lib-ui": /node_modules[\\/]naive-ui/,
-        "lib-cm": /node_modules[\\/]@codemirror/,
-      },
+      strategy: "split-by-module",
+      // forceSplitting: {
+      //   "lib-ui": /node_modules[\\/]naive-ui/,
+      //   "lib-cm": /node_modules[\\/]@codemirror/,
+      // },
     },
   },
 })
