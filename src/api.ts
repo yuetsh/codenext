@@ -25,7 +25,7 @@ function decode(bytes?: string) {
 }
 
 const judge = axios.create({ baseURL: `https://judge0api.xuyue.cc` })
-const api = axios.create({ baseURL: `https://code.xuyue.cc/api` })
+const api = axios.create({ baseURL: `https://codeapi.xuyue.cc` })
 
 export async function submit(code: Code, input: string) {
   const encodedCode = encode(code.value)
