@@ -58,7 +58,7 @@ export async function listCode() {
 }
 
 export async function getCodeByQuery(query: string) {
-  const res = await api.get("/query" + query)
+  const res = await api.get("/query/" + query)
   return res.data
 }
 
