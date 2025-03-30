@@ -18,7 +18,7 @@ function handleShare() {
     <n-flex justify="space-between" align="center">
       <n-flex align="center">
         <Icon icon="streamline-emojis:cat" :width="30" :height="30"></Icon>
-        <div class="title">徐越的自测猫</div>
+        <div class="title">自测猫</div>
       </n-flex>
       <n-flex>
         <n-button @click="handleShare">分享</n-button>
