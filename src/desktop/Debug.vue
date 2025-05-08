@@ -30,7 +30,7 @@ const isDark = useDark()
 
 onMounted(() => {
   // const url = "http://localhost:8000"
-  const url = "https://pyviz.xuyue.cc"
+  const url = import.meta.env.PUBLIC_PYVIZ_URL
   const base = url + "/iframe-embed.html"
 
   const part1 = qs.stringify({

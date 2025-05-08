@@ -12,7 +12,7 @@
     <script
       async
       defer
-      src="https://maxkb.xuyue.cc/api/application/embed?protocol=https&host=maxkb.xuyue.cc&token=1b7cd529423b3f36"
+      src="<%= process.env.PUBLIC_MAXKB_URL %>/api/application/embed?protocol=<%= process.env.PUBLIC_PROTOCOL %>&<%= process.env.PUBLIC_MAXKB_URL %>&token=<%= process.env.PUBLIC_MAXKB_TOKEN %>"
     ></script>
   </head>
   <body>
