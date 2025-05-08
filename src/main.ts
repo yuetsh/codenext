@@ -52,7 +52,7 @@ const app = createApp(App)
 app.use(naive)
 app.mount("#app")
 
-if (import.meta.env.MODE === "staging") {
+if (!!import.meta.env.PUBLIC_ICONIFY) {
   addAPIProvider("", {
     resources: [import.meta.env.PUBLIC_ICONIFY],
   })
