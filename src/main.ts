@@ -52,8 +52,8 @@ const app = createApp(App)
 app.use(naive)
 app.mount("#app")
 
-if (!!import.meta.env.PUBLIC_ICONIFY) {
+if (!!import.meta.env.PUBLIC_ICONIFY_URL) {
   addAPIProvider("", {
-    resources: [import.meta.env.PUBLIC_ICONIFY],
+    resources: [import.meta.env.PUBLIC_ICONIFY_URL],
   })
 }
