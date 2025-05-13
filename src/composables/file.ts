@@ -21,14 +21,22 @@ export function reset() {
   }))
 }
 
-export function addFive() {
-  files.value.push(
-    ...Array.from({ length: 5 }).map(() => ({
+export function add(len = 1) {
+  if (len == 1) {
+    files.value.push({
       in: "",
       out: "",
       error: false,
-    })),
-  )
+    })
+  } else {
+    files.value.push(
+      ...Array.from({ length: len }).map(() => ({
+        in: "",
+        out: "",
+        error: false,
+      })),
+    )
+  }
 }
 
 export function remove(index: number) {
