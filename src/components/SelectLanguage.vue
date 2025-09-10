@@ -6,6 +6,7 @@ import { code } from "../composables/code"
 const LANGS = [
   ["python", "Python"],
   ["c", "C 语言"],
+  ["cpp", "C++"],
 ]
 
 const languages: SelectOption[] = LANGS.map((it) => ({

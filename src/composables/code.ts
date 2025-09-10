@@ -17,6 +17,7 @@ const cache: Cache = {
   code: {
     python: useStorage("code_python", sources["python"]),
     c: useStorage("code_c", sources["c"]),
+    cpp: useStorage("code_cpp", sources["cpp"]),
   },
 }
 

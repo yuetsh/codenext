@@ -1,6 +1,6 @@
 import { RemovableRef } from "@vueuse/core"
 
-export type LANGUAGE = "c" | "python"
+export type LANGUAGE = "c" | "python" | "cpp"
 
 export interface Code {
   value: string

@@ -68,6 +68,5 @@ export async function createCode(data: { code: string; query: string }) {
 }
 
 export async function removeCode(id: number) {
-  const res = await api.delete(`/${id}`)
-  console.log(res.data)
+  await api.delete(`/${id}`)
 }
