@@ -52,7 +52,7 @@ watch(
 )
 
 const lang = computed(() => {
-  if (props.language === "python") {
+  if (props.language === "python" || props.language === "turtle") {
     return python()
   }
   return cpp()

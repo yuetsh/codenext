@@ -54,6 +54,8 @@ function runSkulptTurtle() {
   })
   Sk.TurtleGraphics = {
     target: canvas,
+    width: canvas.clientWidth,
+    height: canvas.clientHeight
   }
   Sk.misceval
     .asyncToPromise(function () {
