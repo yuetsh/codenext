@@ -21,7 +21,7 @@
 import qs from "query-string"
 import { onMounted, ref, useTemplateRef } from "vue"
 import { code, debug } from "../composables/code"
-import { useDark } from "@vueuse/core";
+import { useDark } from "@vueuse/core"
 
 const src = ref("")
 const loading = ref(true)
@@ -29,7 +29,6 @@ const main = useTemplateRef("main")
 const isDark = useDark()
 
 onMounted(() => {
-  // const url = "http://localhost:8000"
   const url = import.meta.env.PUBLIC_PYVIZ_URL
   const base = url + "/iframe-embed.html"
 

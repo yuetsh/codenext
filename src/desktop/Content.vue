@@ -1,7 +1,9 @@
 <script lang="ts" setup>
 import copyTextToClipboard from "copy-text-to-clipboard"
 import { useMessage } from "naive-ui"
-import { computed } from "vue"
+import { computed, watch, useTemplateRef } from "vue"
+// @ts-ignore
+import * as Sk from "skulpt"
 import CodeEditor from "../components/CodeEditor.vue"
 import { analyse, analyzeError, showAnalyse } from "../composables/analyse"
 import {
@@ -13,6 +15,7 @@ import {
   reset,
   size,
   status,
+  turtleRunId,
 } from "../composables/code"
 import { Status } from "../types"
 
@@ -26,6 +29,42 @@ function copy() {
 function handleDebug() {
   debug.value = true
 }
+const turtleCanvas = useTemplateRef("turtle")
+
+function builtinRead(x: any) {
+  if (
+    Sk.builtinFiles === undefined ||
+    Sk.builtinFiles["files"][x] === undefined
+  )
+    throw "文件没有找到：'" + x + "'"
+  return Sk.builtinFiles["files"][x]
+}
+
+function runSkulptTurtle() {
+  const canvas = turtleCanvas.value
+  if (!canvas) return
+  canvas.innerHTML = ""
+  Sk.configure({
+    output: console.log,
+    read: builtinRead,
+    inputfun: function () {
+      return input.value
+    },
+    __future__: Sk.python3,
+  })
+  Sk.TurtleGraphics = {
+    target: canvas,
+  }
+  Sk.misceval
+    .asyncToPromise(function () {
+      return Sk.importMainWithBody("<stdin>", false, code.value, true)
+    })
+    .catch((err: any) => {
+      output.value += String(err)
+    })
+}
+
+watch(turtleRunId, () => runSkulptTurtle())
 </script>
 
 <template>
@@ -82,6 +121,7 @@ function handleDebug() {
           </template>
           <template #2>
             <CodeEditor
+              v-if="code.language !== 'turtle'"
               icon="streamline-emojis:hibiscus"
               label="输出框"
               v-model="output"
@@ -115,6 +155,7 @@ function handleDebug() {
                 </n-popover>
               </template>
             </CodeEditor>
+            <div v-else ref="turtle" class="canvas"></div>
           </template>
         </n-split>
       </template>
@@ -125,5 +166,10 @@ function handleDebug() {
 <style scoped>
 .container {
   height: calc(100vh - 60px);
+}
+
+.canvas {
+  width: 100%;
+  height: 100%;
 }
 </style>

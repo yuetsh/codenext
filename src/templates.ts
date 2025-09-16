@@ -6,6 +6,17 @@ const pythonSource = ""
 const javaSource =
   "public class Main {\r\n    public static void main(String[] args) {\r\n        \r\n    }\r\n}"
 
+const turtleSource = `import turtle
+
+t = turtle.Turtle()
+t.speed(1)
+
+for i in range(4):
+    t.forward(100)
+    t.left(90)
+
+turtle.done()`
+
 export const languageToId = {
   c: 50,
   cpp: 54,
@@ -18,4 +29,5 @@ export const sources = {
   cpp: cppSource,
   java: javaSource,
   python: pythonSource,
+  turtle: turtleSource,
 }

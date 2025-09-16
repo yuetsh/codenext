@@ -5,6 +5,7 @@ import { code } from "../composables/code"
 
 const LANGS = [
   ["python", "Python"],
+  ["turtle", "海龟绘图"],
   ["c", "C 语言"],
   ["cpp", "C++"],
 ]
@@ -35,6 +36,6 @@ const languages: SelectOption[] = LANGS.map((it) => ({
 </template>
 <style scoped>
 .select {
-  width: 120px;
+  width: 125px;
 }
 </style>

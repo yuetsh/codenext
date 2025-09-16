@@ -18,6 +18,7 @@ const cache: Cache = {
     python: useStorage("code_python", sources["python"]),
     c: useStorage("code_c", sources["c"]),
     cpp: useStorage("code_cpp", sources["cpp"]),
+    turtle: useStorage("code_turtle", sources["turtle"]),
   },
 }
 
@@ -29,6 +30,7 @@ export const input = ref("")
 export const output = ref("")
 export const status = ref(Status.NotStarted)
 export const loading = ref(false)
+export const turtleRunId = ref(0)
 export const size = ref(0)
 export const debug = ref(false)
 
@@ -100,15 +102,22 @@ export function reset() {
 export async function run() {
   loading.value = true
   const cleanCode = code.value.trim()
-  if (!cleanCode) return
-  output.value = ""
-  status.value = Status.NotStarted
-  const result = await submit(
-    { value: cleanCode, language: code.language },
-    input.value.trim(),
-  )
-  output.value = result.output || ""
-  status.value = result.status
+  if (!cleanCode) {
+    loading.value = false
+    return
+  }
+  if (code.language === "turtle") {
+    turtleRunId.value++
+  } else {
+    output.value = ""
+    status.value = Status.NotStarted
+    const result = await submit(
+      { value: cleanCode, language: code.language },
+      input.value.trim(),
+    )
+    output.value = result.output || ""
+    status.value = result.status
+  }
   loading.value = false
 }
 
