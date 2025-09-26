@@ -72,9 +72,14 @@ export async function init() {
   if (base64) {
     try {
       const data = JSON.parse(atou(base64))
-      code.language = data.lang
-      code.value = data.code
-      input.value = data.input
+      const lang = ["python", "c", "cpp", "turtle"].includes(data.lang)
+        ? (data.lang as LANGUAGE)
+        : defaultLanguage
+      const sharedCode = data.code ?? sources[lang]
+      cache.code[lang].value = sharedCode
+      code.language = lang
+      code.value = sharedCode
+      input.value = typeof data.input === "string" ? data.input : ""
     } catch (err) {}
   }
   const preset = parsed.query as string
