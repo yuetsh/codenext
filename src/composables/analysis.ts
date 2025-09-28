@@ -7,7 +7,7 @@ export const loading = ref(false)
 
 export async function getAIAnalysis() {
   analysis.value = ""
-  // 使用 streaming 流式方式 fetch /ai/analysis 接口，传入 code 和 error_info
+  // 使用 streaming 流式方式 fetch /ai 接口，传入 code 和 error_info
   const baseUrl = import.meta.env.PUBLIC_CODEAPI_URL
   loading.value = true
   try {

@@ -141,7 +141,7 @@ watch(turtleRunId, () => runSkulptTurtle())
                   运行成功
                 </n-tag>
                 <n-tag v-if="showAnalysis" type="warning">运行失败</n-tag>
-                <n-popover v-if="showAnalysis" trigger="click">
+                <n-popover v-if="showAnalysis" trigger="click" placement="left">
                   <template #trigger>
                     <n-button quaternary type="error" @click="getAIAnalysis">
                       推测原因
