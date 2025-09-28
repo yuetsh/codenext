@@ -2,10 +2,16 @@
 import copyTextToClipboard from "copy-text-to-clipboard"
 import { useMessage } from "naive-ui"
 import { computed, watch, useTemplateRef } from "vue"
+import { marked } from "marked"
 // @ts-ignore
 import * as Sk from "skulpt"
 import CodeEditor from "../components/CodeEditor.vue"
-import { analyse, analyzeError, showAnalyse } from "../composables/analyse"
+import {
+  analysis,
+  loading,
+  getAIAnalysis,
+  showAnalysis,
+} from "../composables/analysis"
 import {
   clearInput,
   code,
@@ -55,7 +61,7 @@ function runSkulptTurtle() {
   Sk.TurtleGraphics = {
     target: canvas,
     width: canvas.clientWidth,
-    height: canvas.clientHeight
+    height: canvas.clientHeight,
   }
   Sk.misceval
     .asyncToPromise(function () {
@@ -134,26 +140,19 @@ watch(turtleRunId, () => runSkulptTurtle())
                 <n-tag v-if="status === Status.Accepted" type="success">
                   运行成功
                 </n-tag>
-                <n-tag v-if="showAnalyse" type="warning">运行失败</n-tag>
-                <n-popover
-                  v-if="showAnalyse && code.language === 'python'"
-                  trigger="click"
-                >
+                <n-tag v-if="showAnalysis" type="warning">运行失败</n-tag>
+                <n-popover v-if="showAnalysis" trigger="click">
                   <template #trigger>
-                    <n-button quaternary type="error" @click="analyzeError">
+                    <n-button quaternary type="error" @click="getAIAnalysis">
                       推测原因
                     </n-button>
                   </template>
-                  <template #header v-if="analyse.line > 0">
-                    错误在第
-                    <n-tag type="error">
-                      <b>{{ analyse.line }}</b>
-                    </n-tag>
-                    行
-                  </template>
-                  <span v-if="analyse.message">
-                    {{ analyse.message }}
-                  </span>
+                  <n-spin :show="loading">
+                    <div
+                      class="analysisPanel"
+                      v-html="marked.parse(analysis)"
+                    ></div>
+                  </n-spin>
                 </n-popover>
               </template>
             </CodeEditor>
@@ -173,5 +172,12 @@ watch(turtleRunId, () => runSkulptTurtle())
 .canvas {
   width: 100%;
   height: 100%;
+}
+
+.analysisPanel {
+  width: 400px;
+  min-height: 60px;
+  max-height: 300px;
+  overflow: auto;
 }
 </style>

@@ -18,6 +18,7 @@ import {
   NTabPane,
   NTabs,
   NTag,
+  NSpin,
   create,
 } from "naive-ui"
 import "normalize.css"
@@ -45,6 +46,7 @@ const naive = create({
     NTabs,
     NTabPane,
     NDropdown,
+    NSpin,
   ],
 })
 

@@ -17,7 +17,7 @@ for i in range(4):
 
 turtle.done()`
 
-export const languageToId = {
+export const languageToId: { [key in string]: number } = {
   c: 50,
   cpp: 54,
   java: 62,
