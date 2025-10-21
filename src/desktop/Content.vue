@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { code } from "../composables/code"
 import CodeSection from "./CodeSection.vue"
+import DebugSection from "./DebugSection.vue"
 import InputSection from "./InputSection.vue"
 import OutputSection from "./OutputSection.vue"
 import TurtleSection from "./TurtleSection.vue"
@@ -10,7 +11,9 @@ import TurtleSection from "./TurtleSection.vue"
   <n-layout-content class="container">
     <n-split direction="horizontal" :min="1 / 3" :max="4 / 5">
       <template #1>
-        <CodeSection />
+        <component
+          :is="code.language === 'python' ? DebugSection : CodeSection"
+        />
       </template>
       <template #2>
         <n-split

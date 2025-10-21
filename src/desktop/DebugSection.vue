@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import copyTextToClipboard from "copy-text-to-clipboard"
 import { useMessage } from "naive-ui"
-import CodeEditor from "../components/CodeEditor.vue"
+import DebugEditor from "../components/DebugEditor.vue"
 import { code, input, reset, size } from "../composables/code"
 import { debug } from "../api"
 
@@ -20,7 +20,7 @@ async function handleDebug() {
 </script>
 
 <template>
-  <CodeEditor
+  <DebugEditor
     label="代码区"
     icon="streamline-emojis:lemon"
     :font-size="size"
@@ -28,8 +28,16 @@ async function handleDebug() {
     :language="code.language"
   >
     <template #actions>
+      <n-button
+        quaternary
+        type="error"
+        :disabled="!code.value"
+        @click="handleDebug"
+      >
+        调试
+      </n-button>
       <n-button quaternary type="primary" @click="copy">复制</n-button>
       <n-button quaternary @click="reset">清空</n-button>
     </template>
-  </CodeEditor>
+  </DebugEditor>
 </template>
