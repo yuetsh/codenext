@@ -19,22 +19,12 @@
   >
     <Query />
   </n-modal>
-  <n-modal
-    v-model:show="debug"
-    preset="card"
-    style="width: 700px"
-    :mask-closable="false"
-    title="可视化调试（测试版）"
-  >
-    <Debug />
-  </n-modal>
 </template>
 <script lang="ts" setup>
 import { useMagicKeys, whenever } from "@vueuse/core"
 import { ref } from "vue"
-import { debug, run } from "../composables/code"
+import { run } from "../composables/code"
 import Content from "./Content.vue"
-import Debug from "./Debug.vue"
 import File from "./File.vue"
 import Header from "./Header.vue"
 import Query from "./Query.vue"

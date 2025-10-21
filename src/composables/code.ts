@@ -32,7 +32,6 @@ export const status = ref(Status.NotStarted)
 export const loading = ref(false)
 export const turtleRunId = ref(0)
 export const size = ref(0)
-export const debug = ref(false)
 
 watch(size, (value: number) => {
   cache.fontsize.value = value
