@@ -1,6 +1,9 @@
 import { addAPIProvider } from "@iconify/vue"
 import {
   NButton,
+  NCard,
+  NCollapse,
+  NCollapseItem,
   NConfigProvider,
   NDropdown,
   NFlex,
@@ -14,11 +17,15 @@ import {
   NModal,
   NPopover,
   NSelect,
+  NSpace,
   NSplit,
   NTabPane,
   NTabs,
   NTag,
   NSpin,
+  NText,
+  NTooltip,
+  NSlider,
   create,
 } from "naive-ui"
 import "normalize.css"
@@ -28,6 +35,9 @@ import App from "./App.vue"
 const naive = create({
   components: [
     NButton,
+    NCard,
+    NCollapse,
+    NCollapseItem,
     NConfigProvider,
     NMessageProvider,
     NLayout,
@@ -47,6 +57,10 @@ const naive = create({
     NTabPane,
     NDropdown,
     NSpin,
+    NSpace,
+    NText,
+    NTooltip,
+    NSlider,
   ],
 })
 
