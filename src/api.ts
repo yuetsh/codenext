@@ -70,3 +70,11 @@ export async function createCode(data: { code: string; query: string }) {
 export async function removeCode(id: number) {
   await api.delete(`/${id}`)
 }
+
+export async function debug(code: string, inputs: string[]) {
+  const res = await api.post("/debug", {
+    code,
+    inputs,
+  })
+  return res.data
+}

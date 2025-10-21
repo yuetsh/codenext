@@ -3,6 +3,7 @@ import copyTextToClipboard from "copy-text-to-clipboard"
 import { useMessage } from "naive-ui"
 import { computed, watch, useTemplateRef } from "vue"
 import { marked } from "marked"
+import { debug as debugApi } from "../api"
 // @ts-ignore
 import * as Sk from "skulpt"
 import CodeEditor from "../components/CodeEditor.vue"
@@ -35,6 +36,13 @@ function copy() {
 function handleDebug() {
   debug.value = true
 }
+
+async function handleDebugNew() {
+  const inputs = input.value ? input.value.split("\n") : []
+  const res = await debugApi(code.value, inputs)
+  console.log(res.data)
+}
+
 const turtleCanvas = useTemplateRef("turtle")
 
 function builtinRead(x: any) {
@@ -95,6 +103,16 @@ watch(turtleRunId, () => runSkulptTurtle())
               @click="handleDebug"
             >
               调试
+            </n-button>
+
+            <n-button
+              quaternary
+              type="error"
+              :disabled="!code.value"
+              v-if="false && code.language === 'python'"
+              @click="handleDebugNew"
+            >
+              调试（新）
             </n-button>
             <n-button quaternary type="primary" @click="copy">复制</n-button>
             <n-button quaternary @click="reset">清空</n-button>

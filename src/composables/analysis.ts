@@ -13,6 +13,9 @@ export async function getAIAnalysis() {
   try {
     const response = await fetch(`${baseUrl}/ai`, {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         code: code.value,
         language: code.language,
