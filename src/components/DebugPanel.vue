@@ -70,7 +70,7 @@ function closePanel() {
   <n-card v-if="visible" class="floating-panel" :bordered="true" size="small">
     <template #header>
       <n-flex justify="space-between" align="center">
-        <n-flex align="center" :gap="8">
+        <n-flex align="center">
           <n-icon>
             <Icon icon="mdi:bug" :width="16" :height="16" />
           </n-icon>
@@ -90,40 +90,39 @@ function closePanel() {
       <!-- 变量部分 -->
       <n-collapse :default-expanded-names="['variables']">
         <n-collapse-item title="变量" name="variables">
-          <template #header>
-            <n-flex align="center" :gap="8">
-              <n-icon>
-                <Icon icon="mdi:variable" :width="14" :height="14" />
-              </n-icon>
-              <n-text>变量</n-text>
-            </n-flex>
-          </template>
-
-          <div v-if="formattedVariables.length === 0">
-            <n-text type="info" class="no-variables-text"> 暂无变量 </n-text>
-          </div>
-          <n-space v-else vertical :size="12">
-            <n-card
-              v-for="variable in formattedVariables"
-              :key="variable.name"
-              size="small"
-              :bordered="true"
-            >
-              <n-flex
-                justify="space-between"
-                align="center"
-                class="variable-header"
-              >
-                <n-text strong :type="'primary'">{{ variable.name }}</n-text>
-                <n-tag size="small" type="info">{{ variable.type }}</n-tag>
+          <n-scrollbar style="max-height: 200px">
+            <template #header>
+              <n-flex align="center">
+                <n-icon>
+                  <Icon icon="mdi:variable" :width="14" :height="14" />
+                </n-icon>
+                <n-text>变量</n-text>
               </n-flex>
-              <n-scrollbar style="max-height: 200px">
+            </template>
+            <div v-if="formattedVariables.length === 0">
+              <n-text type="info" class="no-variables-text">暂无变量</n-text>
+            </div>
+            <n-space v-else vertical>
+              <n-card
+                v-for="variable in formattedVariables"
+                :key="variable.name"
+                size="small"
+                :bordered="true"
+              >
+                <n-flex
+                  justify="space-between"
+                  align="center"
+                  class="variable-header"
+                >
+                  <n-text strong :type="'primary'">{{ variable.name }}</n-text>
+                  <n-tag size="small" type="info">{{ variable.type }}</n-tag>
+                </n-flex>
                 <n-text code class="variable-value">
                   {{ variable.value }}
                 </n-text>
-              </n-scrollbar>
-            </n-card>
-          </n-space>
+              </n-card>
+            </n-space>
+          </n-scrollbar>
         </n-collapse-item>
       </n-collapse>
 
@@ -138,9 +137,8 @@ function closePanel() {
               <n-text>输出({{ outputLines }}行)</n-text>
             </n-flex>
           </template>
-
           <n-card size="small" :bordered="true">
-            <n-scrollbar style="max-height: 400px">
+            <n-scrollbar style="max-height: 300px">
               <n-text code class="output-text">
                 {{ formattedOutput }}
               </n-text>
