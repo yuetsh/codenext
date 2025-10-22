@@ -134,7 +134,7 @@ function closePanel() {
         <n-collapse v-if="formattedOutput" :default-expanded-names="['output']">
           <n-collapse-item :title="`输出 (${outputLines} 行)`" name="output">
             <template #header>
-              <n-flex align="center" :gap="8">
+              <n-flex align="center">
                 <n-icon>
                   <Icon icon="mdi:console" :width="14" :height="14" />
                 </n-icon>
@@ -170,7 +170,7 @@ function closePanel() {
   font-size: 12px;
   white-space: pre-wrap;
   word-break: break-all;
-  max-height: 200px;
+  max-height: 400px;
   overflow-y: auto;
   display: block;
 }
