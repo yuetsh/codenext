@@ -26,10 +26,13 @@ const formattedVariables = computed(() => {
     // 处理特殊类型
     let displayValue = ""
     let displayType = typeof value
-    
-    if (Array.isArray(value) && value.length === 2 && 
-        value[0] === "IMPORTED_FAUX_PRIMITIVE" && 
-        value[1] === "imported object") {
+
+    if (
+      Array.isArray(value) &&
+      value.length === 2 &&
+      value[0] === "IMPORTED_FAUX_PRIMITIVE" &&
+      value[1] === "imported object"
+    ) {
       displayValue = ""
       displayType = "function"
     } else if (typeof value === "object" && value !== null) {
@@ -84,74 +87,67 @@ function closePanel() {
     </template>
 
     <n-space vertical :size="16" class="panel-content">
-        <!-- 变量部分 -->
-        <n-collapse :default-expanded-names="['variables']">
-          <n-collapse-item title="变量" name="variables">
-            <template #header>
-              <n-flex align="center" :gap="8">
-                <n-icon>
-                  <Icon icon="mdi:variable" :width="14" :height="14" />
-                </n-icon>
-                <n-text>变量</n-text>
-              </n-flex>
-            </template>
+      <!-- 变量部分 -->
+      <n-collapse :default-expanded-names="['variables']">
+        <n-collapse-item title="变量" name="variables">
+          <template #header>
+            <n-flex align="center" :gap="8">
+              <n-icon>
+                <Icon icon="mdi:variable" :width="14" :height="14" />
+              </n-icon>
+              <n-text>变量</n-text>
+            </n-flex>
+          </template>
 
-            <div v-if="formattedVariables.length === 0">
-              <n-text
-                type="info"
-                class="no-variables-text"
+          <div v-if="formattedVariables.length === 0">
+            <n-text type="info" class="no-variables-text"> 暂无变量 </n-text>
+          </div>
+          <n-space v-else vertical :size="12">
+            <n-card
+              v-for="variable in formattedVariables"
+              :key="variable.name"
+              size="small"
+              :bordered="true"
+            >
+              <n-flex
+                justify="space-between"
+                align="center"
+                class="variable-header"
               >
-                暂无变量
-              </n-text>
-            </div>
-            <n-space v-else vertical :size="12">
-              <n-card
-                v-for="variable in formattedVariables"
-                :key="variable.name"
-                size="small"
-                :bordered="true"
-              >
-                <n-flex
-                  justify="space-between"
-                  align="center"
-                  class="variable-header"
-                >
-                  <n-text strong :type="'primary'">{{ variable.name }}</n-text>
-                  <n-tag size="small" type="info">{{ variable.type }}</n-tag>
-                </n-flex>
-                <n-text
-                  code
-                  class="variable-value"
-                >
+                <n-text strong :type="'primary'">{{ variable.name }}</n-text>
+                <n-tag size="small" type="info">{{ variable.type }}</n-tag>
+              </n-flex>
+              <n-scrollbar style="max-height: 200px">
+                <n-text code class="variable-value">
                   {{ variable.value }}
                 </n-text>
-              </n-card>
-            </n-space>
-          </n-collapse-item>
-        </n-collapse>
+              </n-scrollbar>
+            </n-card>
+          </n-space>
+        </n-collapse-item>
+      </n-collapse>
 
-        <!-- 输出部分 -->
-        <n-collapse v-if="formattedOutput" :default-expanded-names="['output']">
-          <n-collapse-item :title="`输出 (${outputLines} 行)`" name="output">
-            <template #header>
-              <n-flex align="center">
-                <n-icon>
-                  <Icon icon="mdi:console" :width="14" :height="14" />
-                </n-icon>
-                <n-text>输出 ({{ outputLines }} 行)</n-text>
-              </n-flex>
-            </template>
+      <!-- 输出部分 -->
+      <n-collapse v-if="formattedOutput" :default-expanded-names="['output']">
+        <n-collapse-item :title="`输出 (${outputLines} 行)`" name="output">
+          <template #header>
+            <n-flex align="center">
+              <n-icon>
+                <Icon icon="mdi:console" :width="14" :height="14" />
+              </n-icon>
+              <n-text>输出({{ outputLines }}行)</n-text>
+            </n-flex>
+          </template>
 
-            <n-card size="small" :bordered="true">
-              <n-text
-                code
-                class="output-text"
-              >
+          <n-card size="small" :bordered="true">
+            <n-scrollbar style="max-height: 400px">
+              <n-text code class="output-text">
                 {{ formattedOutput }}
               </n-text>
-            </n-card>
-          </n-collapse-item>
-        </n-collapse>
+            </n-scrollbar>
+          </n-card>
+        </n-collapse-item>
+      </n-collapse>
     </n-space>
   </n-card>
 </template>
@@ -170,8 +166,6 @@ function closePanel() {
   font-size: 12px;
   white-space: pre-wrap;
   word-break: break-all;
-  max-height: 400px;
-  overflow-y: auto;
   display: block;
 }
 

@@ -10,7 +10,7 @@ import { useIntervalFn } from "@vueuse/core"
 
 // 组件
 import DebugEditor from "../components/DebugEditor.vue"
-import FloatingPanel from "../components/FloatingPanel.vue"
+import DebugPanel from "../components/DebugPanel.vue"
 
 // 组合式函数和类型
 import { code, input, reset, size, output, status } from "../composables/code"
@@ -492,8 +492,8 @@ function autoRun() {
       :next-line-text="nextLineText"
     />
 
-    <!-- 浮动调试面板 -->
-    <FloatingPanel
+    <!-- 调试面板 -->
+    <DebugPanel
       :visible="showFloatingPanel"
       :variables="currentVariables"
       :output="currentOutput"

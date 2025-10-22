@@ -26,6 +26,7 @@ import {
   NText,
   NTooltip,
   NSlider,
+  NScrollbar,
   create,
 } from "naive-ui"
 import "normalize.css"
@@ -61,6 +62,7 @@ const naive = create({
     NText,
     NTooltip,
     NSlider,
+    NScrollbar,
   ],
 })
 
