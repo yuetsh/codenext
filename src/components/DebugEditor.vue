@@ -13,12 +13,8 @@ import { LANGUAGE } from "../types"
 
 interface Props {
   modelValue: string
-  label?: string
-  icon?: string
   language?: LANGUAGE
   fontSize?: number
-  readonly?: boolean
-  placeholder?: string
   currentLine?: number
   nextLine?: number
   currentLineText?: string
@@ -26,11 +22,8 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  label: "",
   language: "python",
   fontSize: 24,
-  readonly: false,
-  placeholder: "",
 })
 
 const code = ref(props.modelValue)
@@ -58,7 +51,7 @@ const highlightField = StateField.define<DecorationSet>({
         if (effect.value.currentLine || effect.value.nextLine) {
           const decorations_array: any[] = []
 
-              // 当前行高亮（绿色）
+          // 当前行高亮（绿色）
           if (effect.value.currentLine) {
             try {
               const line = tr.state.doc.line(effect.value.currentLine)
@@ -67,20 +60,23 @@ const highlightField = StateField.define<DecorationSet>({
                   class: "cm-current-line",
                 }).range(line.from),
               )
-              
+
               // 在当前行添加文字 - 使用行装饰而不是Widget
               if (effect.value.currentLineText) {
                 decorations_array.push(
                   Decoration.line({
                     class: "cm-current-line-with-text",
                     attributes: {
-                      "data-text": effect.value.currentLineText
-                    }
+                      "data-text": effect.value.currentLineText,
+                    },
                   }).range(line.from),
                 )
               }
             } catch (e) {
-              console.warn("Invalid line number for current line:", effect.value.currentLine)
+              console.warn(
+                "Invalid line number for current line:",
+                effect.value.currentLine,
+              )
             }
           }
 
@@ -93,20 +89,23 @@ const highlightField = StateField.define<DecorationSet>({
                   class: "cm-next-line",
                 }).range(line.from),
               )
-              
-              // 在下一步行添加文字 - 使用行装饰而不是Widget
+
+              // 在下一步行添加文字
               if (effect.value.nextLineText) {
                 decorations_array.push(
                   Decoration.line({
                     class: "cm-next-line-with-text",
                     attributes: {
-                      "data-text": effect.value.nextLineText
-                    }
+                      "data-text": effect.value.nextLineText,
+                    },
                   }).range(line.from),
                 )
               }
             } catch (e) {
-              console.warn("Invalid line number for next line:", effect.value.nextLine)
+              console.warn(
+                "Invalid line number for next line:",
+                effect.value.nextLine,
+              )
             }
           }
 
@@ -124,6 +123,7 @@ const highlightField = StateField.define<DecorationSet>({
 const styleTheme = EditorView.baseTheme({
   "& .cm-scroller": {
     "font-family": "Monaco",
+    height: "calc(100vh - 120px)",
   },
   "&.cm-editor.cm-focused": {
     outline: "none",
@@ -239,7 +239,12 @@ function updateHighlight() {
 
 // 监听 props 变化并更新高亮
 watch(
-  () => [props.currentLine, props.nextLine, props.currentLineText, props.nextLineText],
+  () => [
+    props.currentLine,
+    props.nextLine,
+    props.currentLineText,
+    props.nextLineText,
+  ],
   () => {
     updateHighlight()
   },
@@ -250,11 +255,8 @@ watch(
     v-model="code"
     indentWithTab
     :extensions="[styleTheme, lang, highlightField, isDark ? oneDark : smoothy]"
-    :disabled="props.readonly"
     :tabSize="4"
-    :placeholder="props.placeholder"
     :style="{
-      height: 'calc(100% - 60px)',
       fontSize: props.fontSize + 'px',
     }"
     @change="onChange"
