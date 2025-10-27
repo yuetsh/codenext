@@ -90,7 +90,7 @@ function closePanel() {
       <!-- 变量部分 -->
       <n-collapse :default-expanded-names="['variables']">
         <n-collapse-item title="变量" name="variables">
-          <n-scrollbar style="max-height: 200px">
+          <n-scrollbar style="max-height: 260px">
             <template #header>
               <n-flex align="center">
                 <n-icon>
