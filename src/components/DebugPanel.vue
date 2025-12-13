@@ -152,7 +152,6 @@ function closePanel() {
 
 <style scoped>
 .floating-panel {
-  font-family: "Monaco", "Consolas", monospace;
   width: 300px;
   position: absolute;
   top: 20px;
@@ -172,7 +171,6 @@ function closePanel() {
 }
 
 .no-variables-text {
-  font-style: italic;
   text-align: center;
   display: block;
   padding: 20px;
