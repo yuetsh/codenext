@@ -19,13 +19,11 @@ interface Props {
   nextLine?: number
   currentLineText?: string
   nextLineText?: string
-  height?: number
 }
 
 const props = withDefaults(defineProps<Props>(), {
   language: "python",
   fontSize: 24,
-  height: 600,
 })
 
 const code = ref(props.modelValue)
@@ -260,7 +258,7 @@ watch(
     :tabSize="4"
     :style="{
       fontSize: props.fontSize + 'px',
-      height: props.height + 'px',
+      maxHeight: '600px',
     }"
     @change="onChange"
     @ready="onReady"

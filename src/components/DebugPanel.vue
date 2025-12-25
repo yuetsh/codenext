@@ -12,9 +12,8 @@ import { useIntervalFn } from "@vueuse/core"
 import DebugEditor from "./DebugEditor.vue"
 
 // 组合式函数和类型
-import { code, input, reset, size, output, status } from "../composables/code"
+import { code, size, output, status } from "../composables/code"
 import { Status } from "../types"
-import { debug } from "../api"
 
 // ==================== Props 和 Emits ====================
 const props = defineProps<{
