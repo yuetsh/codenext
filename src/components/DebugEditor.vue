@@ -259,6 +259,7 @@ watch(
     :style="{
       fontSize: props.fontSize + 'px',
       maxHeight: '600px',
+      height: '100%',
     }"
     @change="onChange"
     @ready="onReady"
