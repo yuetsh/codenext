@@ -356,71 +356,47 @@ function autoRun() {
       />
 
       <!-- 调试控制按钮 -->
-      <n-flex align="center" justify="center" style="margin-top: 20px">
+      <n-flex size="large" justify="center" style="margin-top: 20px">
         <!-- 步骤控制 -->
-        <n-tooltip>
-          <template #trigger>
-            <n-button @click="firstStep">
-              <template #icon>
-                <Icon icon="material-symbols:skip-previous" />
-              </template>
-            </n-button>
+        <n-button circle @click="firstStep">
+          <template #icon>
+            <Icon icon="material-symbols:skip-previous" />
           </template>
-          第一步
-        </n-tooltip>
+        </n-button>
 
-        <n-tooltip>
-          <template #trigger>
-            <n-button type="primary" @click="prevStep">
-              <template #icon>
-                <Icon icon="tabler:chevron-left" />
-              </template>
-            </n-button>
+        <n-button circle type="primary" @click="prevStep">
+          <template #icon>
+            <Icon icon="tabler:chevron-left" />
           </template>
-          上一步
-        </n-tooltip>
+        </n-button>
 
-        <n-tooltip>
-          <template #trigger>
-            <n-button
-              :type="isAutoRunning ? 'warning' : 'info'"
-              @click="autoRun"
-            >
-              <template #icon>
-                <Icon
-                  :icon="
-                    isAutoRunning
-                      ? 'material-symbols:pause'
-                      : 'material-symbols:play-arrow'
-                  "
-                />
-              </template>
-            </n-button>
+        <n-button
+          circle
+          :type="isAutoRunning ? 'warning' : 'info'"
+          @click="autoRun"
+        >
+          <template #icon>
+            <Icon
+              :icon="
+                isAutoRunning
+                  ? 'material-symbols:pause'
+                  : 'material-symbols:play-arrow'
+              "
+            />
           </template>
-          {{ isAutoRunning ? "暂停自动运行" : "开始自动运行" }}
-        </n-tooltip>
+        </n-button>
 
-        <n-tooltip>
-          <template #trigger>
-            <n-button type="error" @click="nextStep">
-              <template #icon>
-                <Icon icon="tabler:chevron-right" />
-              </template>
-            </n-button>
+        <n-button circle type="error" @click="nextStep">
+          <template #icon>
+            <Icon icon="tabler:chevron-right" />
           </template>
-          下一步
-        </n-tooltip>
+        </n-button>
 
-        <n-tooltip>
-          <template #trigger>
-            <n-button @click="lastStep">
-              <template #icon>
-                <Icon icon="material-symbols:skip-next" />
-              </template>
-            </n-button>
+        <n-button circle @click="lastStep">
+          <template #icon>
+            <Icon icon="material-symbols:skip-next" />
           </template>
-          最后一步
-        </n-tooltip>
+        </n-button>
       </n-flex>
 
       <!-- 调试进度条 -->
