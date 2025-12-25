@@ -355,7 +355,7 @@ function autoRun() {
         :next-line-text="nextLineText"
       />
 
-      <!-- 中：调试控制按钮 -->
+      <!-- 调试控制按钮 -->
       <n-flex align="center" justify="center" style="margin-top: 20px">
         <!-- 步骤控制 -->
         <n-tooltip>
@@ -423,7 +423,7 @@ function autoRun() {
         </n-tooltip>
       </n-flex>
 
-      <!-- 下：调试进度条 -->
+      <!-- 调试进度条 -->
       <n-flex v-if="debugData && debugData.trace" vertical>
         <n-slider
           v-model:value="currentStep"
@@ -433,105 +433,74 @@ function autoRun() {
           :tooltip="false"
         />
         <!-- 步骤信息 -->
-        <n-text
-          depth="3"
-          style="text-align: center; font-size: 12px; white-space: nowrap"
-        >
+        <n-text class="step-info">
           步骤: {{ currentStep + 1 }} / {{ debugData.trace.length }}
         </n-text>
       </n-flex>
     </n-flex>
 
     <!-- 右侧：调试信息面板 -->
-    <n-card :bordered="true" size="small" style="width: 350px">
-      <template #header>
-        <n-flex justify="space-between" align="center">
-          <n-flex align="center">
-            <n-icon>
-              <Icon icon="mdi:bug" :width="16" :height="16" />
-            </n-icon>
-            <n-text strong>调试信息</n-text>
-          </n-flex>
-        </n-flex>
-      </template>
-
+    <n-card :bordered="true" title="调试信息" size="small" style="width: 350px">
       <!-- 变量部分 -->
-      <n-collapse :default-expanded-names="['variables']">
-        <n-collapse-item name="variables">
-          <template #header>
-            <n-flex align="center">
-              <n-icon>
-                <Icon icon="mdi:variable" :width="14" :height="14" />
-              </n-icon>
-              <n-text>变量</n-text>
-            </n-flex>
-          </template>
-          <n-scrollbar style="max-height: 260px">
-            <n-space
-              v-if="formattedVariables.length === 0"
-              vertical
-              style="padding: 20px; text-align: center"
+      <n-flex vertical style="margin-bottom: 16px">
+        <n-text strong style="margin-bottom: 8px">变量</n-text>
+        <n-scrollbar style="max-height: 260px">
+          <n-flex
+            v-if="formattedVariables.length === 0"
+            vertical
+            style="padding: 20px; text-align: center"
+          >
+            <n-text type="info">暂无变量</n-text>
+          </n-flex>
+          <n-flex v-else vertical>
+            <n-card
+              v-for="variable in formattedVariables"
+              :key="variable.name"
+              size="small"
+              :bordered="true"
             >
-              <n-text type="info">暂无变量</n-text>
-            </n-space>
-            <n-space v-else vertical>
-              <n-card
-                v-for="variable in formattedVariables"
-                :key="variable.name"
-                size="small"
-                :bordered="true"
-              >
-                <n-space vertical :size="8">
-                  <n-flex justify="space-between" align="center">
-                    <n-text strong type="primary">{{ variable.name }}</n-text>
-                    <n-tag size="small" type="info">{{ variable.type }}</n-tag>
-                  </n-flex>
-                  <n-text
-                    code
-                    style="
-                      font-size: 12px;
-                      white-space: pre-wrap;
-                      word-break: break-all;
-                    "
-                  >
-                    {{ variable.value }}
-                  </n-text>
-                </n-space>
-              </n-card>
-            </n-space>
-          </n-scrollbar>
-        </n-collapse-item>
-      </n-collapse>
+              <n-flex vertical>
+                <n-flex justify="space-between" align="center">
+                  <n-text class="debug-text-title" strong type="primary">{{
+                    variable.name
+                  }}</n-text>
+                  <n-tag size="small" type="info">{{ variable.type }}</n-tag>
+                </n-flex>
+                <n-text code class="debug-text">
+                  {{ variable.value }}
+                </n-text>
+              </n-flex>
+            </n-card>
+          </n-flex>
+        </n-scrollbar>
+      </n-flex>
 
       <!-- 输出部分 -->
-      <n-collapse v-if="currentOutput" :default-expanded-names="['output']">
-        <n-collapse-item name="output">
-          <template #header>
-            <n-flex align="center">
-              <n-icon>
-                <Icon icon="mdi:console" :width="14" :height="14" />
-              </n-icon>
-              <n-text>输出({{ outputLines }}行)</n-text>
-            </n-flex>
-          </template>
-          <n-card size="small" :bordered="true">
-            <n-scrollbar style="max-height: 300px">
-              <n-text
-                code
-                style="
-                  font-size: 12px;
-                  white-space: pre-wrap;
-                  word-break: break-all;
-                  display: block;
-                "
-              >
-                {{ currentOutput }}
-              </n-text>
-            </n-scrollbar>
-          </n-card>
-        </n-collapse-item>
-      </n-collapse>
+      <n-flex v-if="currentOutput" vertical>
+        <n-text strong style="margin-bottom: 8px">输出({{ outputLines }}行)</n-text>
+        <n-card size="small" :bordered="true">
+          <n-scrollbar style="max-height: 300px">
+            <n-text code class="debug-text">
+              {{ currentOutput }}
+            </n-text>
+          </n-scrollbar>
+        </n-card>
+      </n-flex>
     </n-card>
   </n-flex>
 </template>
-<style scoped></style>
+<style scoped>
+.debug-text-title {
+  font-size: 20px;
+}
+
+.debug-text {
+  font-size: 20px;
+  white-space: pre-wrap;
+  word-break: break-all;
+  display: block;
+}
+.step-info {
+  text-align: center;
+}
+</style>
