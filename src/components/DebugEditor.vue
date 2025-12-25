@@ -19,11 +19,13 @@ interface Props {
   nextLine?: number
   currentLineText?: string
   nextLineText?: string
+  height?: number
 }
 
 const props = withDefaults(defineProps<Props>(), {
   language: "python",
   fontSize: 24,
+  height: 600,
 })
 
 const code = ref(props.modelValue)
@@ -123,7 +125,6 @@ const highlightField = StateField.define<DecorationSet>({
 const styleTheme = EditorView.baseTheme({
   "& .cm-scroller": {
     "font-family": "Monaco",
-    height: "calc(100vh - 120px)",
   },
   "&.cm-editor.cm-focused": {
     outline: "none",
@@ -254,10 +255,12 @@ watch(
   <Codemirror
     v-model="code"
     indentWithTab
+    disabled
     :extensions="[styleTheme, lang, highlightField, isDark ? oneDark : smoothy]"
     :tabSize="4"
     :style="{
       fontSize: props.fontSize + 'px',
+      height: props.height + 'px',
     }"
     @change="onChange"
     @ready="onReady"

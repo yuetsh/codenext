@@ -8,7 +8,7 @@ import {
   getAIAnalysis,
   showAnalysis,
 } from "../composables/analysis"
-import AnalysisPanel from "./AnalysisPanel.vue"
+import AnalysisPanel from "../components/AnalysisPanel.vue"
 </script>
 
 <template>
