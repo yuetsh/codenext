@@ -12,7 +12,7 @@ export const python = [
     detail: "读取输入",
     type: "function",
     info: "读取一行输入并返回字符串，可以传入提示文字。",
-    boost: 95,
+    boost: 99,
     apply: "input()",
   },
   {
@@ -250,7 +250,7 @@ export const python = [
     label: "for",
     detail: "for 循环",
     type: "keyword",
-    info: "for target in iterable 结构，逐项遍历，可配合 else、enumerate、zip 等使用。",
+    info: "逐项遍历，可以配合 range 使用。",
     boost: 45,
   },
   {
