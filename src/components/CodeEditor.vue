@@ -3,12 +3,14 @@ import { cpp } from "@codemirror/lang-cpp"
 import { python } from "@codemirror/lang-python"
 import { EditorState } from "@codemirror/state"
 import { EditorView } from "@codemirror/view"
+import { autocompletion } from "@codemirror/autocomplete"
 import { Icon } from "@iconify/vue"
 import { useDark } from "@vueuse/core"
 import { computed, ref, watch } from "vue"
 import { Codemirror } from "vue-codemirror"
 import { oneDark } from "../themes/oneDark"
 import { smoothy } from "../themes/smoothy"
+import { enhanceCompletion } from "../extensions/autocompletion"
 import { LANGUAGE } from "../types"
 
 interface Props {
@@ -51,11 +53,16 @@ watch(
   },
 )
 
-const lang = computed(() => {
+const langExtension = computed(() => {
   if (props.language === "python" || props.language === "turtle") {
     return python()
   }
   return cpp()
+})
+
+const enhanceAutoCompletion = computed(() => {
+  console.log(props.language)
+  return autocompletion({ override: [enhanceCompletion(props.language)] })
 })
 
 function onChange(v: string) {
@@ -79,7 +86,12 @@ function onReady(payload: {
   <Codemirror
     v-model="code"
     indentWithTab
-    :extensions="[styleTheme, lang, isDark ? oneDark : smoothy]"
+    :extensions="[
+      styleTheme,
+      langExtension,
+      enhanceAutoCompletion,
+      isDark ? oneDark : smoothy,
+    ]"
     :disabled="props.readonly"
     :tabSize="4"
     :placeholder="props.placeholder"
