@@ -453,7 +453,9 @@ function autoRun() {
 
       <!-- 输出部分 -->
       <n-flex v-if="currentOutput" vertical>
-        <n-text strong style="margin-bottom: 8px">输出({{ outputLines }}行)</n-text>
+        <n-text strong style="margin-bottom: 8px">
+          输出({{ outputLines }}行)
+          </n-text>
         <n-card size="small" :bordered="true">
           <n-scrollbar style="max-height: 300px">
             <n-text code class="debug-text">

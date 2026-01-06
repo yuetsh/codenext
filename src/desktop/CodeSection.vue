@@ -25,23 +25,26 @@ function copy() {
 /**
  * 检查调试数据是否需要输入但用户没有提供足够的输入
  */
-function needsInputButNotProvided(debugData: any, providedInputs: string[]): boolean {
+function needsInputButNotProvided(
+  debugData: any,
+  providedInputs: string[],
+): boolean {
   if (!debugData?.trace || debugData.trace.length === 0) {
     return false
   }
-  
+
   const lastStep = debugData.trace[debugData.trace.length - 1]
   // 如果最后一步是 raw_input，说明程序在等待输入，用户提供的输入不足
   if (lastStep.event === "raw_input") {
     // 统计 trace 中所有的 raw_input 事件数量（程序需要的输入数量）
     const requiredInputCount = debugData.trace.filter(
-      (step: any) => step.event === "raw_input"
+      (step: any) => step.event === "raw_input",
     ).length
-    
+
     // 如果用户提供的输入数量不足，返回 true
     return providedInputs.length < requiredInputCount
   }
-  
+
   return false
 }
 
@@ -93,7 +96,7 @@ async function handleDebug() {
     :mask-closable="false"
     :auto-focus="false"
     @close="closeDebug"
-    style="width: 80vw; max-width: 1000px;"
+    style="width: 80vw; max-width: 1000px"
   >
     <DebugPanel :initial-debug-data="debugData" @close="closeDebug" />
   </n-modal>
