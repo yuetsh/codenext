@@ -19,6 +19,10 @@ function runSkulptTurtle() {
   const canvas = turtleCanvas.value
   if (!canvas) return
   canvas.innerHTML = ""
+  // Prevent UI from being stuck forever on infinite loops (still runs on main thread).
+  // Skulpt checks this limit periodically and throws a timeout error.
+  ;(Sk as any).execLimit = 5000
+  ;(Sk as any).execStart = new Date()
   Sk.configure({
     output: console.log,
     read: builtinRead,
