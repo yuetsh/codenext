@@ -3,7 +3,7 @@ import { cpp } from "@codemirror/lang-cpp"
 import { python } from "@codemirror/lang-python"
 import { EditorState } from "@codemirror/state"
 import { EditorView } from "@codemirror/view"
-import { autocompletion } from "@codemirror/autocomplete"
+import { autocompletion, completeAnyWord } from "@codemirror/autocomplete"
 import { Icon } from "@iconify/vue"
 import { useDark } from "@vueuse/core"
 import { computed, ref, watch } from "vue"
@@ -62,7 +62,9 @@ const langExtension = computed(() => {
 
 const enhanceAutoCompletion = computed(() => {
   console.log(props.language)
-  return autocompletion({ override: [enhanceCompletion(props.language)] })
+  return autocompletion({
+    override: [enhanceCompletion(props.language), completeAnyWord],
+  })
 })
 
 function onChange(v: string) {
