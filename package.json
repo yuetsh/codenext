@@ -10,30 +10,31 @@
     "fmt": "prettier --write src"
   },
   "dependencies": {
-    "@codemirror/autocomplete": "^6.20.0",
+    "@codemirror/autocomplete": "^6.20.2",
     "@codemirror/lang-cpp": "^6.0.3",
     "@codemirror/lang-python": "^6.2.1",
-    "@vueuse/core": "^14.1.0",
-    "axios": "^1.13.2",
+    "@vueuse/core": "^14.3.0",
+    "axios": "^1.16.0",
     "client-zip": "2.5.0",
     "codemirror": "^6.0.2",
     "copy-text-to-clipboard": "^3.2.2",
     "fflate": "^0.8.2",
     "file-saver": "^2.0.5",
-    "marked": "^17.0.1",
-    "naive-ui": "^2.43.2",
+    "marked": "^18.0.3",
+    "naive-ui": "^2.44.1",
     "normalize.css": "^8.0.1",
     "query-string": "^9.3.1",
     "skulpt": "^1.2.0",
-    "vue": "^3.5.26",
+    "vue": "^3.5.34",
     "vue-codemirror": "^6.1.1"
   },
   "devDependencies": {
-    "@iconify/vue": "^5.0.0",
-    "@rsbuild/core": "^1.7.2",
-    "@rsbuild/plugin-vue": "^1.2.2",
+    "@iconify/vue": "^5.0.1",
+    "@rsbuild/core": "^2.0.5",
+    "@rsbuild/plugin-vue": "^1.2.7",
     "@types/file-saver": "^2.0.7",
-    "prettier": "^3.7.4",
-    "typescript": "^5.9.3"
+    "core-js": "^3.49.0",
+    "prettier": "^3.8.3",
+    "typescript": "^6.0.3"
   }
 }
