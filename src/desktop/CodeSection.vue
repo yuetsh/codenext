@@ -23,41 +23,33 @@ function copy() {
 }
 
 /**
- * 检查调试数据是否需要输入但用户没有提供足够的输入
+ * trace 末尾停在 raw_input 即说明输入不足
+ * （pg_logger 在缺输入时会立刻 done=True，trace 中至多只有 1 个 raw_input 事件，
+ * 所以不能用计数对比，只能看末尾）
  */
-function needsInputButNotProvided(
-  debugData: any,
-  providedInputs: string[],
-): boolean {
-  if (!debugData?.trace || debugData.trace.length === 0) {
-    return false
-  }
-
-  const lastStep = debugData.trace[debugData.trace.length - 1]
-  // 如果最后一步是 raw_input，说明程序在等待输入，用户提供的输入不足
-  if (lastStep.event === "raw_input") {
-    // 统计 trace 中所有的 raw_input 事件数量（程序需要的输入数量）
-    const requiredInputCount = debugData.trace.filter(
-      (step: any) => step.event === "raw_input",
-    ).length
-
-    // 如果用户提供的输入数量不足，返回 true
-    return providedInputs.length < requiredInputCount
-  }
-
-  return false
+function endsAtRawInput(debugData: any): boolean {
+  const trace = debugData?.trace
+  if (!trace?.length) return false
+  return trace[trace.length - 1].event === "raw_input"
 }
 
 async function handleDebug() {
   const inputs = input.value
     ? input.value.split("\n").filter((line) => line.trim() !== "")
     : []
-  const res = await debug(code.value, inputs)
+
+  let res
+  try {
+    res = await debug(code.value, inputs)
+  } catch (err: any) {
+    message.error(`调试请求失败: ${err?.message ?? err}`)
+    return
+  }
+
   debugData.value = res.data
 
-  // 检查是否需要输入但用户没有提供足够的输入
-  if (needsInputButNotProvided(res.data, inputs)) {
-    message.warning("程序需要输入，请在输入框输入内容后重新点击调试按钮")
+  if (endsAtRawInput(res.data)) {
+    message.warning("程序需要更多输入，请在输入框补全后重新点击调试")
     return
   }
 

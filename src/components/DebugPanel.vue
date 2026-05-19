@@ -101,16 +101,21 @@ const nextLine = computed(() => {
   return undefined
 })
 
-// 调试信息相关
+// 当前步骤对象
+const currentTraceEntry = computed(() => {
+  return debugData.value?.trace?.[currentStep.value] ?? null
+})
+
+// 调试信息相关：优先显示栈顶（高亮）帧的局部变量，没有则用全局
 const currentVariables = computed(() => {
-  if (
-    debugData.value &&
-    debugData.value.trace &&
-    debugData.value.trace[currentStep.value]
-  ) {
-    return debugData.value.trace[currentStep.value].globals || {}
+  const entry = currentTraceEntry.value
+  if (!entry) return {}
+  const stack = entry.stack_to_render ?? []
+  const topFrame = stack.find((f: any) => f.is_highlighted) ?? stack[stack.length - 1]
+  if (topFrame && topFrame.encoded_locals) {
+    return { ...(entry.globals ?? {}), ...topFrame.encoded_locals }
   }
-  return {}
+  return entry.globals ?? {}
 })
 
 // 格式化变量显示
@@ -120,31 +125,43 @@ const formattedVariables = computed(() => {
     return []
   }
 
-  return Object.entries(variables).map(([key, value]) => {
-    // 处理特殊类型
-    let displayValue = ""
-    let displayType = typeof value
+  const heap: Record<string, any> =
+    debugData.value?.trace?.[currentStep.value]?.heap ?? {}
 
-    if (
-      Array.isArray(value) &&
-      value.length === 2 &&
-      value[0] === "IMPORTED_FAUX_PRIMITIVE" &&
-      value[1] === "imported object"
-    ) {
-      displayValue = ""
-      displayType = "function"
-    } else if (typeof value === "object" && value !== null) {
-      displayValue = JSON.stringify(value, null, 2)
-    } else {
-      displayValue = String(value)
-    }
+  return Object.entries(variables)
+    .filter(([, value]) => {
+      // 隐藏导入的模块/函数占位符
+      if (
+        Array.isArray(value) &&
+        value[0] === "IMPORTED_FAUX_PRIMITIVE"
+      )
+        return false
+      if (Array.isArray(value) && value[0] === "FUNCTION") return false
+      return true
+    })
+    .map(([key, value]) => {
+      const displayValue = decodeValue(value, heap)
+      // resolve REF before checking tag
+      const resolved =
+        Array.isArray(value) && value[0] === "REF"
+          ? heap[String(value[1])]
+          : value
+      const tag = Array.isArray(resolved) ? resolved[0] : null
+      const typeMap: Record<string, string> = {
+        LIST: "list",
+        TUPLE: "tuple",
+        SET: "set",
+        DICT: "dict",
+        FUNCTION: "function",
+        INSTANCE: "object",
+        INSTANCE_PPRINT: "object",
+        CLASS: "class",
+      }
+      const displayType =
+        tag && typeMap[tag] ? typeMap[tag] : typeof value
 
-    return {
-      name: key,
-      value: displayValue,
-      type: displayType,
-    }
-  })
+      return { name: key, value: displayValue, type: displayType }
+    })
 })
 
 // 计算输出行数
@@ -162,7 +179,15 @@ const currentLineText = computed(() => {
   ) {
     const step = debugData.value.trace[currentStep.value]
     const isLastStep = currentStep.value === debugData.value.trace.length - 1
-    const eventText = isLastStep ? "" : getEventText(step.event)
+    // 异常/输入等待/超步数：保留事件提示，让用户能看到状态
+    const isStatusEvent =
+      step.event === "exception" ||
+      step.event === "uncaught_exception" ||
+      step.event === "raw_input" ||
+      step.event === "mouse_input" ||
+      step.event === "instruction_limit_reached"
+    const eventText =
+      isLastStep && !isStatusEvent ? "" : getEventText(step.event)
     const stepText = isLastStep
       ? "最后一步"
       : `当前第${currentStep.value + 1}步`
@@ -188,63 +213,118 @@ const nextLineText = computed(() => {
 })
 
 // ==================== 工具函数 ====================
+
+/**
+ * 将 pg_encoder 编码值解析为可读字符串，heap 用于解引用 REF
+ */
+function decodeValue(val: any, heap: Record<string, any>, depth = 0): string {
+  if (depth > 8) return "..."
+  if (val === null || val === undefined) return "None"
+  if (typeof val === "boolean") return val ? "True" : "False"
+  if (typeof val === "string") return JSON.stringify(val)
+  if (!Array.isArray(val)) return String(val)
+
+  const [tag, ...rest] = val
+  switch (tag) {
+    case "REF": {
+      const obj = heap[String(rest[0])]
+      return obj ? decodeValue(obj, heap, depth + 1) : `REF(${rest[0]})`
+    }
+    case "LIST":
+      return "[" + rest.map((e: any) => decodeValue(e, heap, depth + 1)).join(", ") + "]"
+    case "TUPLE":
+      return rest.length === 1
+        ? "(" + decodeValue(rest[0], heap, depth + 1) + ",)"
+        : "(" + rest.map((e: any) => decodeValue(e, heap, depth + 1)).join(", ") + ")"
+    case "SET":
+      return "{" + rest.map((e: any) => decodeValue(e, heap, depth + 1)).join(", ") + "}"
+    case "DICT":
+      return (
+        "{" +
+        rest
+          .map(([k, v]: [any, any]) => decodeValue(k, heap, depth + 1) + ": " + decodeValue(v, heap, depth + 1))
+          .join(", ") +
+        "}"
+      )
+    case "FUNCTION":
+      return `<function ${rest[0]}>`
+    case "INSTANCE":
+      return `<${rest[0]} instance>`
+    case "INSTANCE_PPRINT":
+      // [class_name, __str__ value, [attr, value], ...]
+      return `<${rest[0]}: ${rest[1]}>`
+    case "CLASS":
+      return `<class ${rest[0]}>`
+    case "SPECIAL_FLOAT":
+      return String(rest[0])
+    case "IMPORTED_FAUX_PRIMITIVE":
+      return String(rest[0])
+    default:
+      return rest.length === 1 ? String(rest[0]) : JSON.stringify(val)
+  }
+}
+
 /**
  * 获取事件类型的中文描述
  */
 function getEventText(event: string): string {
   switch (event) {
     case "step_line":
-      return "" // 普通执行不显示额外文字
+      return ""
     case "call":
       return "(调用函数)"
     case "return":
       return "(函数返回)"
     case "exception":
-      return "(异常)"
     case "uncaught_exception":
       return "(异常)"
     case "raw_input":
+    case "mouse_input":
       return "(等待输入)"
+    case "instruction_limit_reached":
+      return "(超出步数上限)"
     default:
       return event || ""
   }
 }
 
-// 输出相关
+// 输出：stdout 和异常信息合并显示，不互相覆盖
 const currentOutput = computed(() => {
+  const entry = currentTraceEntry.value
+  if (!entry) return output.value || ""
+
+  let outputText = (entry.stdout ?? "").trimEnd()
+
   if (
-    debugData.value &&
-    debugData.value.trace &&
-    debugData.value.trace.length > 0
+    entry.event === "exception" ||
+    entry.event === "uncaught_exception" ||
+    entry.event === "instruction_limit_reached"
   ) {
-    let outputText = ""
-
-    for (let i = 0; i <= currentStep.value; i++) {
-      const step = debugData.value.trace[i]
-      if (step) {
-        if (step.event === "exception" || step.event === "uncaught_exception") {
-          if (step.exception_msg) {
-            outputText = step.exception_msg
-          }
-        } else if (step.stdout) {
-          outputText = step.stdout
-        }
-      }
+    if (entry.exception_msg) {
+      outputText = outputText
+        ? outputText + "\n" + entry.exception_msg
+        : entry.exception_msg
     }
+  }
 
-    outputText = outputText.trimEnd()
+  return outputText
+})
 
-    const hasException = debugData.value.trace.some(
-      (step: any) =>
-        step.event === "exception" || step.event === "uncaught_exception",
+// 把外部状态的同步放到 watch 里（computed 不能有副作用）
+watch(
+  [currentOutput, () => debugData.value?.trace],
+  ([text, trace]) => {
+    if (!trace) return
+    output.value = text
+    const hasException = trace.some(
+      (s: any) =>
+        s.event === "exception" ||
+        s.event === "uncaught_exception" ||
+        s.event === "instruction_limit_reached",
     )
     status.value = hasException ? Status.RuntimeError : Status.Accepted
-
-    output.value = outputText
-    return outputText
-  }
-  return output.value || ""
-})
+  },
+)
 
 // ==================== 主要功能函数 ====================
 /**
@@ -330,14 +410,21 @@ function autoRun() {
   if (!debugData.value || !debugData.value.trace) return
 
   if (isAutoRunActive.value) {
-    // 停止自动运行
     pauseAutoRun()
     isAutoRunning.value = false
-  } else {
-    // 开始自动运行
-    isAutoRunning.value = true
-    resumeAutoRun()
+    return
   }
+
+  const trace = debugData.value.trace
+  // 已经到末尾或停在等待输入，没法继续自动运行
+  if (currentStep.value >= trace.length - 1) return
+  if (trace[currentStep.value]?.event === "raw_input") {
+    message.info("当前停在等待输入步，请先重新运行并提供输入")
+    return
+  }
+
+  isAutoRunning.value = true
+  resumeAutoRun()
 }
 </script>
 
