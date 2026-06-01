@@ -11,6 +11,9 @@ export default defineConfig({
       index: "./src/main.ts",
     },
   },
+  output: {
+    polyfill: "usage",
+  },
   performance: {
     chunkSplit: {
       strategy: "split-by-module",
