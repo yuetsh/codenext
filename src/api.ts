@@ -1,6 +1,6 @@
 import axios from "axios"
 import { languageToId } from "./templates"
-import { Code, Submission } from "./types"
+import { Code, LANGUAGE, Submission } from "./types"
 
 function encode(string?: string) {
   return btoa(String.fromCharCode(...new TextEncoder().encode(string ?? "")))
@@ -132,4 +132,9 @@ export async function debug(code: string, inputs: string[]) {
     inputs,
   })
   return res.data
+}
+
+export async function formatCode(code: string, language: LANGUAGE) {
+  const res = await api.post("/format", { code, language })
+  return res.data.code as string
 }
