@@ -78,7 +78,7 @@ async function handleDebug() {
   >
     <template #actions>
       <n-button quaternary type="primary" @click="copy">复制</n-button>
-      <n-button quaternary @click="handleFormat">整理代码</n-button>
+      <n-button quaternary @click="handleFormat">整理</n-button>
       <n-button quaternary @click="reset">清空</n-button>
       <n-button
         v-if="code.language === 'python'"
