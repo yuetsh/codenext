@@ -2,7 +2,7 @@ import { useStorage } from "@vueuse/core"
 import copyTextToClipboard from "copy-text-to-clipboard"
 import qs from "query-string"
 import { reactive, ref, watch } from "vue"
-import { getCodeByQuery, submit } from "../api"
+import { formatCode, getCodeByQuery, submit } from "../api"
 import { sources } from "../templates"
 import { Cache, Code, LANGUAGE, Status } from "../types"
 import { atou, utoa } from "../utils"
@@ -135,4 +135,8 @@ export function share() {
   copyTextToClipboard(
     qs.stringifyUrl({ url: location.href, query: { share: base64 } }),
   )
+}
+
+export async function format() {
+  code.value = await formatCode(code.value, code.language)
 }
