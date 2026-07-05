@@ -3,6 +3,7 @@ import { code } from "../composables/code"
 import CodeSection from "./CodeSection.vue"
 import InputSection from "./InputSection.vue"
 import OutputSection from "./OutputSection.vue"
+import SqlSection from "./SqlSection.vue"
 import TurtleSection from "./TurtleSection.vue"
 </script>
 
@@ -14,7 +15,7 @@ import TurtleSection from "./TurtleSection.vue"
       </template>
       <template #2>
         <n-split
-          v-if="code.language !== 'turtle'"
+          v-if="code.language !== 'turtle' && code.language !== 'sql'"
           direction="vertical"
           :default-size="1 / 3"
           :min="1 / 5"
@@ -27,7 +28,8 @@ import TurtleSection from "./TurtleSection.vue"
             <OutputSection />
           </template>
         </n-split>
-        <TurtleSection v-else />
+        <TurtleSection v-else-if="code.language === 'turtle'" />
+        <SqlSection v-else />
       </template>
     </n-split>
   </n-layout-content>
