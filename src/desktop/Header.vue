@@ -2,8 +2,9 @@
 import { Icon } from "@iconify/vue"
 import { useMessage } from "naive-ui"
 import SelectLanguage from "../components/SelectLanguage.vue"
+import SelectSqlTable from "../components/SelectSqlTable.vue"
 import ThemeButton from "../components/ThemeButton.vue"
-import { loading, run, share, size } from "../composables/code"
+import { code, loading, run, share, size } from "../composables/code"
 
 const message = useMessage()
 
@@ -34,6 +35,7 @@ function handleShare() {
           <template #prefix>字号</template>
         </n-input-number>
         <SelectLanguage />
+        <SelectSqlTable v-if="code.language === 'sql'" />
         <n-button type="primary" @click="run" :disabled="loading">
           运行 (F5)
         </n-button>
