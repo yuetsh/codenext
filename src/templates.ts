@@ -17,11 +17,14 @@ for i in range(4):
 
 turtle.done()`
 
+const sqlSource = "-- 在这里编写你的 SQL 语句\n"
+
 export const languageToId: { [key in string]: number } = {
   c: 50,
   cpp: 54,
   java: 62,
   python: 71,
+  sql: 82,
 }
 
 export const sources = {
@@ -30,4 +33,5 @@ export const sources = {
   java: javaSource,
   python: pythonSource,
   turtle: turtleSource,
+  sql: sqlSource,
 }

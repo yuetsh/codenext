@@ -19,6 +19,7 @@ const cache: Cache = {
     c: useStorage("code_c", sources["c"]),
     cpp: useStorage("code_cpp", sources["cpp"]),
     turtle: useStorage("code_turtle", sources["turtle"]),
+    sql: useStorage("code_sql", sources["sql"]),
   },
 }
 
@@ -71,7 +72,7 @@ export async function init() {
   if (base64) {
     try {
       const data = JSON.parse(atou(base64))
-      const lang = ["python", "c", "cpp", "turtle"].includes(data.lang)
+      const lang = ["python", "c", "cpp", "turtle", "sql"].includes(data.lang)
         ? (data.lang as LANGUAGE)
         : defaultLanguage
       const sharedCode = data.code ?? sources[lang]
