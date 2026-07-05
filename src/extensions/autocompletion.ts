@@ -10,6 +10,7 @@ import { cpp } from "./cpp"
 import { c } from "./c"
 import { python } from "./python"
 import { turtle } from "./turtle"
+import { sql } from "./sql"
 
 type ChineseCompletion = Pick<
   Completion,
@@ -22,6 +23,7 @@ const chineseAnnotations: Record<string, ChineseCompletion[]> = {
   turtle,
   c,
   cpp,
+  sql,
 }
 
 export function enhanceCompletion(language: LANGUAGE): CompletionSource {
