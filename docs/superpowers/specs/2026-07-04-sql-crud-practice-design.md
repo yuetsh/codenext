@@ -8,7 +8,8 @@
 
 ## 范围
 
-- 仅涉及 `codenext/`（前端）。`codeapinew/`（后端）不需要任何改动——SQL 执行复用现有的 Judge0 直连链路，与 C/C++ 的执行方式一致。
+- SQL 执行本身只涉及 `codenext/`（前端），复用现有的 Judge0 直连链路，与 C/C++ 的执行方式一致，不需要改动 `codeapinew/`。
+- 代码格式化（"整理"按钮）需要给 `codeapinew/formatter.py` 新增 `sql` 分支（用 `sqlparse` 库），是本次唯一涉及后端的改动，见"代码格式化"一节。
 - 不做自动判题/评分、不做前后对比高亮、不做多语句持久会话。这些是明确排除的非目标（见"已排除的方案"）。
 
 ## 架构与执行流程
@@ -58,6 +59,23 @@
 
 后端 `codeapinew` 不需要任何改动。
 
+## 代码格式化（"整理"按钮）
+
+现有"整理"按钮（`CodeSection.vue:81`）已经是语言无关的通用功能：`code.ts` 的 `format()` 调用后端 `/format` 接口，`codeapinew/formatter.py` 的 `format_code()` 按 `language` 分发到不同的格式化工具（python/turtle 用 `ruff format`，c/cpp 用 `clang-format`）。前端不需要任何改动，只需给 `format_code()` 新增 `sql` 分支：
+
+```python
+def _format_with_sql(code: str) -> str:
+    # sqlparse 对语法错误宽容，不会抛异常，语法问题留给判题阶段反馈
+    # strip_whitespace 会把多条语句压成一行，先按分号拆分再逐条格式化
+    statements = sqlparse.split(code)
+    return "\n\n".join(
+        sqlparse.format(s, strip_whitespace=True, keyword_case="upper")
+        for s in statements
+    )
+```
+
+在 `format_code()` 里加入 `if language == "sql": return _format_with_sql(code)` 分支即可。需要给 `codeapinew` 新增依赖 `sqlparse`。
+
 ## 已排除的方案（非目标）
 
 - **不做自动判题/评分**：没有"标准答案"比对，考察由老师人工完成。
@@ -72,3 +90,4 @@
 
 - 手动验证：针对三张候选表分别执行 INSERT / UPDATE / DELETE / SELECT，确认输出符合预期。
 - 回归验证：语言切换、分享链接（`?share=`）、localStorage 缓存机制在新增 `sql` 语言后，对其他既有语言（python/c/cpp/turtle）无影响。
+- "整理"按钮：验证多语句（含分号分隔）、关键字大小写混用、含语法错误的 SQL 格式化后不报错、行为符合预期。
