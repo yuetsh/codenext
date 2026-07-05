@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { cpp } from "@codemirror/lang-cpp"
 import { python } from "@codemirror/lang-python"
+import { sql } from "@codemirror/lang-sql"
 import { EditorState } from "@codemirror/state"
 import { EditorView } from "@codemirror/view"
 import { autocompletion, completeAnyWord } from "@codemirror/autocomplete"
@@ -56,6 +57,9 @@ watch(
 const langExtension = computed(() => {
   if (props.language === "python" || props.language === "turtle") {
     return python()
+  }
+  if (props.language === "sql") {
+    return sql()
   }
   return cpp()
 })

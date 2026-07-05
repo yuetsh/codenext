@@ -10,16 +10,17 @@ const LANGS = computed(() => {
     ["turtle", "海龟绘图"],
     ["c", "C 语言"],
     ["cpp", "C++"],
+    ["sql", "SQL"],
   ]
   if (isMobile.value) {
-    return allLangs.filter(([lang]) => lang !== "turtle")
+    return allLangs.filter(([lang]) => lang !== "turtle" && lang !== "sql")
   }
   return allLangs
 })
 
-// 如果当前在移动端且语言是海龟绘图，自动切换到 Python
+// 如果当前在移动端且语言是海龟绘图或 SQL，自动切换到 Python
 watch(isMobile, (mobile) => {
-  if (mobile && code.language === "turtle") {
+  if (mobile && (code.language === "turtle" || code.language === "sql")) {
     code.language = "python"
   }
 })
