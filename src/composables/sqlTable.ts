@@ -1,5 +1,5 @@
 import { ref } from "vue"
-import { defaultSqlTableId, sqlTables } from "../data/sqlTables"
+import { buildSetupSql, defaultSqlTableId, sqlTables } from "../data/sqlTables"
 
 export const selectedTableId = ref(defaultSqlTableId)
 
@@ -12,5 +12,5 @@ export function buildSqlScript(studentSql: string) {
     sqlTables.find((item) => item.id === selectedTableId.value) ??
     sqlTables[0]
   const normalizedSql = studentSql.trim().replace(/;?\s*$/, ";")
-  return `${table.setupSql}\n\n${normalizedSql}\n\nSELECT * FROM ${table.tableName};`
+  return `${buildSetupSql(table)}\n\n${normalizedSql}\n\nSELECT * FROM ${table.tableName};`
 }
