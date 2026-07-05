@@ -12,7 +12,7 @@ import TurtleSection from "./TurtleSection.vue"
     <n-split
       v-if="code.language === 'sql'"
       direction="vertical"
-      :default-size="3 / 5"
+      :default-size="1 / 4"
       :min="1 / 4"
       :max="3 / 4"
     >
