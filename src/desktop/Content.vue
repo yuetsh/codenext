@@ -9,13 +9,27 @@ import TurtleSection from "./TurtleSection.vue"
 
 <template>
   <n-layout-content class="container">
-    <n-split direction="horizontal" :min="1 / 3" :max="4 / 5">
+    <n-split
+      v-if="code.language === 'sql'"
+      direction="vertical"
+      :default-size="3 / 5"
+      :min="1 / 4"
+      :max="3 / 4"
+    >
+      <template #1>
+        <CodeSection />
+      </template>
+      <template #2>
+        <SqlSection />
+      </template>
+    </n-split>
+    <n-split v-else direction="horizontal" :min="1 / 3" :max="4 / 5">
       <template #1>
         <CodeSection />
       </template>
       <template #2>
         <n-split
-          v-if="code.language !== 'turtle' && code.language !== 'sql'"
+          v-if="code.language !== 'turtle'"
           direction="vertical"
           :default-size="1 / 3"
           :min="1 / 5"
@@ -28,8 +42,7 @@ import TurtleSection from "./TurtleSection.vue"
             <OutputSection />
           </template>
         </n-split>
-        <TurtleSection v-else-if="code.language === 'turtle'" />
-        <SqlSection v-else />
+        <TurtleSection v-else />
       </template>
     </n-split>
   </n-layout-content>
