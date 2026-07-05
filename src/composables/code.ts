@@ -7,6 +7,7 @@ import { sources } from "../templates"
 import { Cache, Code, LANGUAGE, Status } from "../types"
 import { atou, utoa } from "../utils"
 import { isMobile } from "./breakpoints"
+import { buildSqlScript, resetSqlTableSelection } from "./sqlTable"
 
 const defaultLanguage = "python"
 
@@ -45,6 +46,7 @@ watch(
     code.value = cache.code[value].value
     output.value = ""
     status.value = Status.NotStarted
+    if (value === "sql") resetSqlTableSelection()
   },
 )
 
@@ -116,8 +118,10 @@ export async function run() {
   } else {
     output.value = ""
     status.value = Status.NotStarted
+    const sourceCode =
+      code.language === "sql" ? buildSqlScript(cleanCode) : cleanCode
     const result = await submit(
-      { value: cleanCode, language: code.language },
+      { value: sourceCode, language: code.language },
       input.value.trim(),
     )
     output.value = result.output || ""
