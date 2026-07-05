@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { computed } from "vue"
+import { computed, watch } from "vue"
 import CodeEditor from "../components/CodeEditor.vue"
+import { output } from "../composables/code"
 import { selectedTableId } from "../composables/sqlTable"
 import { sqlTables } from "../data/sqlTables"
 import OutputSection from "./OutputSection.vue"
@@ -10,6 +11,10 @@ const selectedTable = computed(
     sqlTables.find((table) => table.id === selectedTableId.value) ??
     sqlTables[0],
 )
+
+watch(selectedTableId, () => {
+  output.value = ""
+})
 </script>
 
 <template>

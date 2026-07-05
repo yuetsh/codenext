@@ -65,7 +65,6 @@ const langExtension = computed(() => {
 })
 
 const enhanceAutoCompletion = computed(() => {
-  console.log(props.language)
   return autocompletion({
     override: [enhanceCompletion(props.language), completeAnyWord],
   })

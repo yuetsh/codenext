@@ -11,5 +11,6 @@ export function buildSqlScript(studentSql: string) {
   const table =
     sqlTables.find((item) => item.id === selectedTableId.value) ??
     sqlTables[0]
-  return `${table.setupSql}\n\n${studentSql}\n\nSELECT * FROM ${table.tableName};`
+  const normalizedSql = studentSql.trim().replace(/;?\s*$/, ";")
+  return `${table.setupSql}\n\n${normalizedSql}\n\nSELECT * FROM ${table.tableName};`
 }

@@ -1,7 +1,6 @@
 export interface SqlTablePreset {
   id: string
   label: string
-  description: string
   tableName: string
   setupSql: string
 }
@@ -63,21 +62,18 @@ export const sqlTables: SqlTablePreset[] = [
   {
     id: "students",
     label: "学生成绩表",
-    description: "适合练习按分数筛选、批量更新、删除不及格记录",
     tableName: "students",
     setupSql: studentsSetupSql,
   },
   {
     id: "employees",
     label: "员工工资表",
-    description: "适合练习按部门分组调薪、按入职日期筛选",
     tableName: "employees",
     setupSql: employeesSetupSql,
   },
   {
     id: "products",
     label: "商品库存表",
-    description: "适合练习新增商品、调整库存、下架缺货商品",
     tableName: "products",
     setupSql: productsSetupSql,
   },
