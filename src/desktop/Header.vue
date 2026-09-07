@@ -9,8 +9,11 @@ import { code, loading, run, share, size } from "../composables/code"
 const message = useMessage()
 
 function handleShare() {
-  share()
-  message.success("分享链接已复制")
+  if (share()) {
+    message.success("分享链接已复制")
+  } else {
+    message.error("复制失败，请检查浏览器剪贴板权限")
+  }
 }
 </script>
 

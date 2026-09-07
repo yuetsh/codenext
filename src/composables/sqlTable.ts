@@ -1,14 +1,17 @@
 import { ref } from "vue"
-import {
-  buildSetupSql,
-  defaultSqlTableId,
-  sqlTables,
-} from "../data/sqlTables"
+import { buildSetupSql, defaultSqlTableId, sqlTables } from "../data/sqlTables"
 
 export const selectedTableId = ref(defaultSqlTableId)
 
 export function resetSqlTableSelection() {
   selectedTableId.value = defaultSqlTableId
+}
+
+// 分享链接里的表 id 不可信，认不出来就退回默认表
+export function selectSqlTable(id: unknown) {
+  selectedTableId.value = sqlTables.some((item) => item.id === id)
+    ? (id as string)
+    : defaultSqlTableId
 }
 
 // SELECT / WITH 属于查询，直接展示查询结果的列；其余（增删改）回显整张表
@@ -18,8 +21,7 @@ function isQuery(sql: string): boolean {
 
 export function buildSqlScript(studentSql: string) {
   const table =
-    sqlTables.find((item) => item.id === selectedTableId.value) ??
-    sqlTables[0]
+    sqlTables.find((item) => item.id === selectedTableId.value) ?? sqlTables[0]
   const normalizedSql = studentSql.trim().replace(/;?\s*$/, ";")
   if (isQuery(studentSql.trim())) {
     return [buildSetupSql(table), ".headers on", normalizedSql].join("\n\n")

@@ -17,8 +17,11 @@ function copy() {
 }
 
 function handleShare() {
-  share()
-  message.success("分享链接已复制")
+  if (share()) {
+    message.success("分享链接已复制")
+  } else {
+    message.error("复制失败，请检查浏览器剪贴板权限")
+  }
 }
 
 const menu: DropdownOption[] = [
