@@ -13,6 +13,7 @@ import DebugEditor from "./DebugEditor.vue"
 
 // 组合式函数和类型
 import { code, size, output, status } from "../composables/code"
+import { isMobile } from "../composables/breakpoints"
 import { Status } from "../types"
 
 // ==================== Props 和 Emits ====================
@@ -463,9 +464,10 @@ function autoRun() {
 </script>
 
 <template>
-  <n-flex>
+  <!-- 移动端上下堆叠，桌面端左右分栏（不换行，否则窄屏时右侧面板会被挤到下面） -->
+  <n-flex :vertical="isMobile" :wrap="false" align="stretch">
     <!-- 左侧：分为上中下三层 -->
-    <n-flex vertical style="flex: 1">
+    <n-flex vertical style="flex: 1; min-width: 0">
       <DebugEditor
         v-model="code.value"
         :font-size="size"
@@ -537,7 +539,16 @@ function autoRun() {
     </n-flex>
 
     <!-- 右侧：调试信息面板 -->
-    <n-card :bordered="true" title="调试信息" size="small" style="width: 350px">
+    <n-card
+      :bordered="true"
+      title="调试信息"
+      size="small"
+      :style="
+        isMobile
+          ? { width: '100%' }
+          : { width: '350px', flex: '0 0 350px' }
+      "
+    >
       <!-- 变量部分：局部 / 全局分组 -->
       <n-flex vertical style="margin-bottom: 16px">
         <n-scrollbar style="max-height: 300px">
