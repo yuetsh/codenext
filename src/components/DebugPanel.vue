@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 // Vue 核心
-import { ref, computed, watch } from "vue"
+import { ref, computed, onBeforeUnmount, watch } from "vue"
 
 // 第三方库
 import copyTextToClipboard from "copy-text-to-clipboard"
@@ -81,7 +81,6 @@ const currentLine = computed(() => {
     debugData.value.trace[currentStep.value]
   ) {
     const line = debugData.value.trace[currentStep.value].line
-    console.log(`Step ${currentStep.value}: currentLine = ${line}`)
     return line && line > 0 ? line : undefined
   }
   return undefined
@@ -94,10 +93,8 @@ const nextLine = computed(() => {
     debugData.value.trace[currentStep.value + 1]
   ) {
     const line = debugData.value.trace[currentStep.value + 1].line
-    console.log(`Step ${currentStep.value}: nextLine = ${line}`)
     return line && line > 0 && line !== currentLine.value ? line : undefined
   }
-  console.log(`Step ${currentStep.value}: nextLine = undefined (no next step)`)
   return undefined
 })
 
@@ -106,40 +103,45 @@ const currentTraceEntry = computed(() => {
   return debugData.value?.trace?.[currentStep.value] ?? null
 })
 
-// 调试信息相关：优先显示栈顶（高亮）帧的局部变量，没有则用全局
-const currentVariables = computed(() => {
-  const entry = currentTraceEntry.value
-  if (!entry) return {}
-  const stack = entry.stack_to_render ?? []
-  const topFrame = stack.find((f: any) => f.is_highlighted) ?? stack[stack.length - 1]
-  if (topFrame && topFrame.encoded_locals) {
-    return { ...(entry.globals ?? {}), ...topFrame.encoded_locals }
-  }
-  return entry.globals ?? {}
-})
+// pg_encoder 的类型标签 -> 展示用的类型名
+const TYPE_LABELS: Record<string, string> = {
+  LIST: "list",
+  TUPLE: "tuple",
+  SET: "set",
+  DICT: "dict",
+  FUNCTION: "function",
+  INSTANCE: "object",
+  INSTANCE_PPRINT: "object",
+  CLASS: "class",
+}
 
-// 格式化变量显示
-const formattedVariables = computed(() => {
-  const variables = currentVariables.value
-  if (!variables || Object.keys(variables).length === 0) {
-    return []
-  }
+/**
+ * 把一组编码变量转成可展示的列表。
+ * orderedNames 用 pg_encoder 给的定义顺序（ordered_globals / ordered_varnames），
+ * 比 Object.keys 更贴近代码里出现的先后。
+ */
+function formatVariables(
+  encoded: Record<string, any> | undefined,
+  orderedNames: string[] | undefined,
+  heap: Record<string, any>,
+) {
+  if (!encoded) return []
 
-  const heap: Record<string, any> =
-    debugData.value?.trace?.[currentStep.value]?.heap ?? {}
+  const names = orderedNames?.length
+    ? orderedNames.filter((name) => name in encoded)
+    : Object.keys(encoded)
 
-  return Object.entries(variables)
-    .filter(([, value]) => {
+  return names
+    .filter((name) => {
+      const value = encoded[name]
       // 隐藏导入的模块/函数占位符
-      if (
-        Array.isArray(value) &&
-        value[0] === "IMPORTED_FAUX_PRIMITIVE"
-      )
+      if (Array.isArray(value) && value[0] === "IMPORTED_FAUX_PRIMITIVE")
         return false
       if (Array.isArray(value) && value[0] === "FUNCTION") return false
       return true
     })
-    .map(([key, value]) => {
+    .map((name) => {
+      const value = encoded[name]
       const displayValue = decodeValue(value, heap)
       // resolve REF before checking tag
       const resolved =
@@ -147,21 +149,51 @@ const formattedVariables = computed(() => {
           ? heap[String(value[1])]
           : value
       const tag = Array.isArray(resolved) ? resolved[0] : null
-      const typeMap: Record<string, string> = {
-        LIST: "list",
-        TUPLE: "tuple",
-        SET: "set",
-        DICT: "dict",
-        FUNCTION: "function",
-        INSTANCE: "object",
-        INSTANCE_PPRINT: "object",
-        CLASS: "class",
-      }
       const displayType =
-        tag && typeMap[tag] ? typeMap[tag] : typeof value
+        tag && TYPE_LABELS[tag] ? TYPE_LABELS[tag] : typeof value
 
-      return { name: key, value: displayValue, type: displayType }
+      return {
+        // __return__ 是 pg_logger 给返回值起的内部名字，直接显示不友好
+        name: name === "__return__" ? "返回值" : name,
+        value: displayValue,
+        type: displayType,
+      }
     })
+}
+
+/**
+ * 变量按作用域分组：栈顶（高亮）帧的局部变量在前，全局变量在后。
+ * 之前是把两者 merge 成一份展示的，函数里看不出哪个是局部、哪个是外面的全局。
+ */
+const variableGroups = computed(() => {
+  const entry = currentTraceEntry.value
+  if (!entry) return []
+
+  const heap: Record<string, any> = entry.heap ?? {}
+  const stack = entry.stack_to_render ?? []
+  const topFrame =
+    stack.find((f: any) => f.is_highlighted) ?? stack[stack.length - 1]
+
+  const groups = []
+  if (topFrame?.encoded_locals) {
+    groups.push({
+      key: "locals",
+      title: `局部变量 · ${topFrame.func_name}()`,
+      variables: formatVariables(
+        topFrame.encoded_locals,
+        topFrame.ordered_varnames,
+        heap,
+      ),
+    })
+  }
+  groups.push({
+    // 不在函数里时没有对照组，标题就用朴素的"变量"
+    key: "globals",
+    title: topFrame ? "全局变量" : "变量",
+    variables: formatVariables(entry.globals, entry.ordered_globals, heap),
+  })
+
+  return groups.filter((group) => group.variables.length > 0)
 })
 
 // 计算输出行数
@@ -310,6 +342,18 @@ const currentOutput = computed(() => {
   return outputText
 })
 
+// 下面的 watch 会把当前调试步的输出/状态写进全局 output、status，
+// 面板关闭后必须还原，否则主页面的输出区会停在某一步的内容、
+// 状态标签也可能被改成「运行错误」。setup 期取值即进入面板时的快照，
+// 放在 onBeforeUnmount 还原可以覆盖所有关闭方式（关闭按钮、Esc、遮罩）。
+const outputBeforeDebug = output.value
+const statusBeforeDebug = status.value
+
+onBeforeUnmount(() => {
+  output.value = outputBeforeDebug
+  status.value = statusBeforeDebug
+})
+
 // 把外部状态的同步放到 watch 里（computed 不能有副作用）
 watch(
   [currentOutput, () => debugData.value?.trace],
@@ -345,16 +389,6 @@ watch(
       // 检查步骤数量并显示提醒
       if (newData.trace && newData.trace.length > 5000) {
         message.warning(`超过 5000 步，请优化代码或减少循环次数`)
-      }
-
-      // 显示前几个 trace 条目的行号
-      if (newData.trace) {
-        console.log("First few trace entries:")
-        newData.trace.slice(0, 5).forEach((entry: any, index: number) => {
-          console.log(
-            `  Step ${index}: line ${entry.line}, event: ${entry.event}`,
-          )
-        })
       }
     }
   },
@@ -504,36 +538,38 @@ function autoRun() {
 
     <!-- 右侧：调试信息面板 -->
     <n-card :bordered="true" title="调试信息" size="small" style="width: 350px">
-      <!-- 变量部分 -->
+      <!-- 变量部分：局部 / 全局分组 -->
       <n-flex vertical style="margin-bottom: 16px">
-        <n-text strong style="margin-bottom: 8px">变量</n-text>
-        <n-scrollbar style="max-height: 260px">
+        <n-scrollbar style="max-height: 300px">
           <n-flex
-            v-if="formattedVariables.length === 0"
+            v-if="variableGroups.length === 0"
             vertical
             style="padding: 20px; text-align: center"
           >
             <n-text type="info">暂无变量</n-text>
           </n-flex>
-          <n-flex v-else vertical>
-            <n-card
-              v-for="variable in formattedVariables"
-              :key="variable.name"
-              size="small"
-              :bordered="true"
-            >
-              <n-flex vertical>
-                <n-flex justify="space-between" align="center">
-                  <n-text class="debug-text-title" strong type="primary">{{
-                    variable.name
-                  }}</n-text>
-                  <n-tag size="small" type="info">{{ variable.type }}</n-tag>
+          <n-flex v-else vertical size="large">
+            <n-flex v-for="group in variableGroups" :key="group.key" vertical>
+              <n-text strong depth="2">{{ group.title }}</n-text>
+              <n-card
+                v-for="variable in group.variables"
+                :key="`${group.key}-${variable.name}`"
+                size="small"
+                :bordered="true"
+              >
+                <n-flex vertical>
+                  <n-flex justify="space-between" align="center">
+                    <n-text class="debug-text-title" strong type="primary">{{
+                      variable.name
+                    }}</n-text>
+                    <n-tag size="small" type="info">{{ variable.type }}</n-tag>
+                  </n-flex>
+                  <n-text code class="debug-text">
+                    {{ variable.value }}
+                  </n-text>
                 </n-flex>
-                <n-text code class="debug-text">
-                  {{ variable.value }}
-                </n-text>
-              </n-flex>
-            </n-card>
+              </n-card>
+            </n-flex>
           </n-flex>
         </n-scrollbar>
       </n-flex>

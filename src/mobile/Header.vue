@@ -2,7 +2,9 @@
 import { Icon } from "@iconify/vue"
 import copyTextToClipboard from "copy-text-to-clipboard"
 import { useMessage, type DropdownOption } from "naive-ui"
+import { computed } from "vue"
 import { code, loading, reset, run, share } from "../composables/code"
+import { debugLoading, startDebug } from "../composables/debug"
 import { tab } from "../composables/tab"
 
 const message = useMessage()
@@ -24,11 +26,28 @@ function handleShare() {
   }
 }
 
-const menu: DropdownOption[] = [
-  { label: "复制", key: "copy", props: { onClick: copy } },
-  { label: "清空", key: "reset", props: { onClick: reset } },
-  { label: "分享", key: "share", props: { onClick: handleShare } },
-]
+async function handleDebug() {
+  const result = await startDebug()
+  if (!result.ok) message[result.level](result.message)
+}
+
+const menu = computed<DropdownOption[]>(() => {
+  const options: DropdownOption[] = [
+    { label: "复制", key: "copy", props: { onClick: copy } },
+    { label: "清空", key: "reset", props: { onClick: reset } },
+    { label: "分享", key: "share", props: { onClick: handleShare } },
+  ]
+  // 调试只支持 Python，跟桌面端的按钮保持一致
+  if (code.language === "python") {
+    options.push({
+      label: debugLoading.value ? "调试中…" : "调试",
+      key: "debug",
+      disabled: debugLoading.value || !code.value,
+      props: { onClick: handleDebug },
+    })
+  }
+  return options
+})
 </script>
 <template>
   <n-layout-header class="container" bordered>

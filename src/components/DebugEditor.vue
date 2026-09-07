@@ -214,13 +214,6 @@ function onReady(payload: {
 // 更新高亮的函数
 function updateHighlight() {
   if (editorView.value) {
-    console.log(
-      "Updating highlight - currentLine:",
-      props.currentLine,
-      "nextLine:",
-      props.nextLine,
-    )
-
     // 如果当前行和下一步相同，只高亮当前行，不显示下一步
     const nextLine =
       props.currentLine === props.nextLine ? undefined : props.nextLine
