@@ -19,21 +19,20 @@ function isQuery(sql: string): boolean {
   return /^\s*(SELECT|WITH)\b/i.test(sql)
 }
 
-export function buildSqlScript(studentSql: string) {
+export interface SqlJob {
+  setup: string
+  sql: string
+  echoTable: string | null
+}
+
+export function buildSqlJob(studentSql: string): SqlJob {
   const table =
     sqlTables.find((item) => item.id === selectedTableId.value) ?? sqlTables[0]
-  const normalizedSql = studentSql.trim().replace(/;?\s*$/, ";")
-  if (isQuery(studentSql.trim())) {
-    return [buildSetupSql(table), ".headers on", normalizedSql].join("\n\n")
+  return {
+    setup: buildSetupSql(table),
+    sql: studentSql,
+    echoTable: isQuery(studentSql.trim()) ? null : table.tableName,
   }
-  return [
-    buildSetupSql(table),
-    ".output /dev/null",
-    normalizedSql,
-    ".output stdout",
-    ".headers on",
-    `SELECT * FROM ${table.tableName};`,
-  ].join("\n\n")
 }
 
 export interface SqlResult {
@@ -41,7 +40,7 @@ export interface SqlResult {
   rows: Record<string, string | number>[]
 }
 
-// 输出为 sqlite CLI 的 list 模式（| 分隔），开启 .headers on 后首行是列名
+// 输出为 sqlite CLI 的 list 模式（| 分隔），首行是列名
 export function parseResult(output: string): SqlResult {
   const lines = output
     .split("\n")

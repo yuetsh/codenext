@@ -19,14 +19,6 @@ turtle.done()`
 
 const sqlSource = ""
 
-export const languageToId: { [key in string]: number } = {
-  c: 50,
-  cpp: 54,
-  java: 62,
-  python: 71,
-  sql: 82,
-}
-
 export const sources = {
   c: cSource,
   cpp: cppSource,

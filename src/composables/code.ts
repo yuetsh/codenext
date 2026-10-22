@@ -2,14 +2,14 @@ import { useStorage } from "@vueuse/core"
 import copyTextToClipboard from "copy-text-to-clipboard"
 import qs from "query-string"
 import { nextTick, reactive, ref, watch } from "vue"
-import { formatCode, getCodeByQuery, submit } from "../api"
+import { formatCode, getCodeByQuery, runSql, submit } from "../api"
 import { sources } from "../templates"
 import { Cache, Code, LANGUAGE, Status } from "../types"
 import { atou, utoa } from "../utils"
 import { isMobile } from "./breakpoints"
 import { dialog, notice } from "./notice"
 import {
-  buildSqlScript,
+  buildSqlJob,
   resetSqlTableSelection,
   selectSqlTable,
   selectedTableId,
@@ -177,12 +177,13 @@ export async function run() {
   } else {
     output.value = ""
     status.value = Status.NotStarted
-    const sourceCode =
-      code.language === "sql" ? buildSqlScript(cleanCode) : cleanCode
-    const result = await submit(
-      { value: sourceCode, language: code.language },
-      input.value.trim(),
-    )
+    const result =
+      code.language === "sql"
+        ? await runSql(buildSqlJob(cleanCode))
+        : await submit(
+            { value: cleanCode, language: code.language },
+            input.value.trim(),
+          )
     output.value = result.output || ""
     status.value = result.status
   }

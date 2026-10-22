@@ -1,21 +1,7 @@
 import axios from "axios"
-import { languageToId } from "./templates"
-import { Code, LANGUAGE, Submission } from "./types"
+import type { SqlJob } from "./composables/sqlTable"
+import { Code, LANGUAGE } from "./types"
 
-function encode(string?: string) {
-  return btoa(String.fromCharCode(...new TextEncoder().encode(string ?? "")))
-}
-
-function decode(bytes?: string) {
-  const latin = atob(bytes ?? "")
-  return new TextDecoder("utf-8").decode(
-    Uint8Array.from({ length: latin.length }, (_, index) =>
-      latin.charCodeAt(index),
-    ),
-  )
-}
-
-const judge = axios.create({ baseURL: import.meta.env.PUBLIC_JUDGE0API_URL })
 const api = axios.create({ baseURL: import.meta.env.PUBLIC_CODEAPI_URL })
 
 type PythonWorkerRequest = {
@@ -78,32 +64,52 @@ async function runPythonInWorker(source: string, stdin: string) {
   })
 }
 
+// SQL 在浏览器里用 sql.js 执行；每次新开一个 worker，跑完或超时就销毁
+export function runSql(job: SqlJob) {
+  return new Promise<{ status: number; output: string }>((resolve) => {
+    const worker = new Worker(
+      new URL("./workers/sqlite.worker.ts", import.meta.url),
+      { type: "module" },
+    )
+    let timeout = 0
+    const finish = (result: { status: number; output: string }) => {
+      clearTimeout(timeout)
+      worker.terminate()
+      resolve(result)
+    }
+    worker.onerror = () => finish({ status: 11, output: "SQL 引擎加载失败" })
+    worker.onmessage = (event) => {
+      // 首次加载 wasm 不计入超时，引擎就绪后再提交并开始计时
+      if (event.data?.ready) {
+        timeout = window.setTimeout(
+          () => finish({ status: 11, output: "运行超时" }),
+          5000,
+        )
+        worker.postMessage(job)
+        return
+      }
+      finish(event.data)
+    }
+  })
+}
+
 export async function submit(code: Code, input: string) {
   if (code.language === "python") {
     return runPythonInWorker(code.value, input)
   }
 
-  const encodedCode = encode(code.value)
-
-  const id = languageToId[code.language]
-  let compilerOptions = ""
-  if (id === 50) compilerOptions = "-lm" // 解决 GCC 的链接问题
-  const payload = {
-    source_code: encodedCode,
-    language_id: id,
-    stdin: encode(input),
-    redirect_stderr_to_stdout: true,
-    compiler_options: compilerOptions,
-  }
-  const response = await judge.post<Submission>("/submissions", payload, {
-    params: { base64_encoded: true, wait: true },
-  })
-  const data = response.data
-  return {
-    status: data.status && data.status.id,
-    output: [decode(data.compile_output), decode(data.stdout)]
-      .join("\n")
-      .trim(),
+  try {
+    const res = await api.post<{ status: number; output: string }>("/run", {
+      code: code.value,
+      language: code.language,
+      stdin: input,
+    })
+    return res.data
+  } catch (err: any) {
+    return {
+      status: 11,
+      output: err?.response?.data?.detail ?? "运行服务不可用，请稍后再试",
+    }
   }
 }
 
